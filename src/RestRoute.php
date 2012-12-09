@@ -16,6 +16,9 @@ use Nette\Http\Url;
 class RestRoute implements IRouter {
 
   /** @var string */
+  protected $path;
+
+  /** @var string */
   protected $module;
 
   /** @var array */
@@ -27,12 +30,32 @@ class RestRoute implements IRouter {
   }
 
   /**
+   * @return string
+   */
+  public function getPath() {
+    if (!$this->path) {
+      $path = implode('/', explode(':', $this->module));
+      $this->path = strtolower($path);
+    }
+
+    return $this->path;
+  }
+
+  /**
    * Maps HTTP request to a Request object.
    * @param \Nette\Http\IRequest $httpRequest
    * @return Request|NULL
    */
   public function match(IRequest $httpRequest) {
     $cleanPath = str_replace($httpRequest->getUrl()->getBasePath(), '', $httpRequest->getUrl()->getPath());
+
+    $formats = implode('|', $this->formats);
+    $path = str_replace('/', '\/', $this->getPath());
+    if (!preg_match("/^{$path}\/.+\.({$formats})$/", $cleanPath)) {
+      return NULL;
+    }
+
+    $cleanPath = preg_replace('/^' . $path . '\//', '', $cleanPath);
 
     $params = array();
     list($path, $params['format']) = explode('.', $cleanPath);
@@ -122,7 +145,9 @@ class RestRoute implements IRouter {
    * @return string|NULL
    */
   public function constructUrl(Request $appRequest, Url $refUrl) {
-    $url = '';
+    $cleanPath = str_replace($refUrl->getBasePath(), '', $refUrl->getPath());
+
+    $url = $this->getPath() . '/';
     $params = $appRequest->getParameters();
 
     foreach ($params['associations'] as $k => $v) {
@@ -137,14 +162,18 @@ class RestRoute implements IRouter {
     if (!empty($params['id'])) {
       $url .= '/' . $params['id'];
     }
-
     $url .= '.' . $params['format'];
 
     if (count($params['query'])) {
       $url .= '?' . http_build_query($params['query']);
     }
 
-    $base = $refUrl->baseUrl;
-    return $base . $url;
+    $formats = implode('|', $this->formats);
+    $path = str_replace('/', '\/', $this->getPath());
+    if (!preg_match("/^{$path}\/.+\.({$formats})/", $url)) {
+      return NULL;
+    }
+
+    return $refUrl->baseUrl . $url;
   }
 }
