@@ -186,6 +186,7 @@ query = array(0)
 ```
 
 ## TODO:
+- Tests
 - Fallbacks for HTTP methods PUT, DELETE (header, query param, …)
 
 
