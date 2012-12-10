@@ -124,7 +124,7 @@ query = array(0)
 ```
 ---
 ### Delete:
-**URL:** ```/api/users.json``` &rarr; ```\ApiModule\UsersPresenter::delete```  
+**URL:** ```/api/users/123.json``` &rarr; ```\ApiModule\UsersPresenter::delete```  
 **Method:** DELETE  
 **Request body:** Empty  
 **Params:**  
