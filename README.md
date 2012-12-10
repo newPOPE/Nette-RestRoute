@@ -154,7 +154,7 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/users/123/comments/456.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/123/comments/456.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
 **Params:**  
@@ -169,7 +169,7 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/users/1/blogs/2/comments.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/1/blogs/2/comments.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
 **Params:**  
