@@ -185,9 +185,23 @@ data = ""
 query = array(0)
 ```
 
+##Overriding methods PUT, DELETE
+
+Methods ```PUT``` and ```DELETE``` can be overriden via:  
+
+### HTTP header ```X-HTTP-Method-Override```
+Example:
+
+```
+X-HTTP-Method-Override: (PUT|DELETE)
+```
+
+### Query param ```__method```
+Example:
+
+```
+?__method=(PUT|DELETE)
+```
+
 ## TODO:
 - Tests
-- Fallbacks for HTTP methods PUT, DELETE (header, query param, …)
-
-
-

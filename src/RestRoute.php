@@ -24,6 +24,10 @@ class RestRoute implements IRouter {
   /** @var array */
   protected $formats = array('json');
 
+  const HTTP_HEADER_OVERRIDE = 'X-HTTP-Method-Override';
+
+  const QUERY_PARAM_OVERRIDE = '__method';
+
   public function __construct($module, array $formats) {
     $this->module = $module;
     $this->formats = $formats;
@@ -93,7 +97,7 @@ class RestRoute implements IRouter {
   }
 
   protected function detectAction(HttpRequest $request) {
-    $method = $request->getMethod();
+    $method = $this->detectMethod($request);
 
     switch ($method) {
       case 'GET':
@@ -113,6 +117,28 @@ class RestRoute implements IRouter {
     }
 
     return $action;
+  }
+
+  /**
+   * @param \Nette\Http\Request $request
+   * @return string
+   */
+  protected function detectMethod(HttpRequest $request) {
+    if ($request->getMethod() !== 'POST') {
+      return $request->getMethod();
+    }
+
+    $method = $request->getHeader(self::HTTP_HEADER_OVERRIDE);
+    if(isset($method)) {
+      return strtoupper($method);
+    }
+
+    $method = $request->getQuery(self::QUERY_PARAM_OVERRIDE);
+    if(isset($method)) {
+      return strtoupper($method);
+    }
+
+    return $request->getMethod();
   }
 
   /**
