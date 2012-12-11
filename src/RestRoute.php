@@ -51,7 +51,8 @@ class RestRoute implements IRouter {
    * @return Request|NULL
    */
   public function match(IRequest $httpRequest) {
-    $cleanPath = str_replace($httpRequest->getUrl()->getBasePath(), '', $httpRequest->getUrl()->getPath());
+    $basePath = str_replace('/', '\/', $httpRequest->getUrl()->getBasePath());
+    $cleanPath = preg_replace("/^{$basePath}/", '', $httpRequest->getUrl()->getPath());
 
     $formats = implode('|', $this->formats);
     $path = str_replace('/', '\/', $this->getPath());
