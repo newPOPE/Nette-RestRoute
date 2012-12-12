@@ -1,0 +1,13 @@
+{
+  "name": "adamstipak/rest-route",
+  "description": "Rest route for Nette Framework",
+  "keywords": ["nette", "routing"],
+  "licence": ["MIT"],
+  "homepage": "https://github.com/newPOPE/Nette-RestRoute",
+  "authors": [
+    {
+      "name": "Adam Štipák",
+      "homepage": "http://newpope.org"
+    }
+  ]
+}
