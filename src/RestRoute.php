@@ -177,6 +177,10 @@ class RestRoute implements IRouter {
     $url = $this->getPath() . '/';
     $params = $appRequest->getParameters();
 
+    if(!isset($params['associations'])) {
+      return NULL;
+    }
+
     foreach ($params['associations'] as $k => $v) {
       $url .= $k . '/' . $v;
     }
@@ -186,9 +190,18 @@ class RestRoute implements IRouter {
     $resource = strtolower($resource);
     $url .= (count($params['associations']) ? '/' : '') . $resource;
 
+    if(!isset($params['id'])) {
+      return NULL;
+    }    
+
     if (!empty($params['id'])) {
       $url .= '/' . $params['id'];
     }
+
+    if(!isset($params['format'])) {
+      return NULL;
+    }
+
     $url .= '.' . $params['format'];
 
     if (count($params['query'])) {
