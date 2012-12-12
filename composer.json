@@ -1,5 +1,5 @@
 {
-  "name": "adamstipak/rest-route",
+  "name": "adamstipak/nette-rest-route",
   "description": "Rest route for Nette Framework",
   "keywords": ["nette", "routing"],
   "licence": ["MIT"],
