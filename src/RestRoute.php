@@ -190,7 +190,7 @@ class RestRoute implements IRouter {
     $resource = strtolower($resource);
     $url .= (count($params['associations']) ? '/' : '') . $resource;
 
-    if (isset($params['id']) && !empty($params['id'])) {
+    if (!empty($params['id'])) {
       $url .= '/' . $params['id'];
     }
 
