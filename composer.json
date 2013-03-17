@@ -9,5 +9,8 @@
       "name": "Adam Štipák",
       "homepage": "http://newpope.org"
     }
-  ]
+  ],
+  "autoload": {
+    "classmap": ["src/RestRoute.php"]
+  }
 }
