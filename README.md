@@ -19,6 +19,7 @@ $router[] = new RestRoute(
 	array('json') // allowed formats
 );
 ```
+You can specify NULL as first parameter in project without modules.
 
 First parameter is a name of the module where the route will sends an Request. URL prefix will be generated. See examples.
 ####Examples:

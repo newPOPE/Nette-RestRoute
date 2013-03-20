@@ -37,6 +37,11 @@ class RestRoute implements IRouter {
    * @return string
    */
   public function getPath() {
+      if (is_null($this->module)) {
+          $this->path = '';
+          return $this->path;
+      }
+      
     if (!$this->path) {
       $path = implode('/', explode(':', $this->module));
       $this->path = strtolower($path);
@@ -56,11 +61,18 @@ class RestRoute implements IRouter {
 
     $formats = implode('|', $this->formats);
     $path = str_replace('/', '\/', $this->getPath());
-    if (!preg_match("/^{$path}\/.+\.({$formats})$/", $cleanPath)) {
-      return NULL;
-    }
 
-    $cleanPath = preg_replace('/^' . $path . '\//', '', $cleanPath);
+    //FIXME: maybe one nice regexp?;)
+    if (is_null($this->module)) {
+        if (!preg_match("/^.+\.({$formats})$/", $cleanPath)) {
+           return NULL;
+        }
+    } else {
+        if (!preg_match("/^{$path}\/.+\.({$formats})$/", $cleanPath)) {
+           return NULL;
+        }
+        $cleanPath = preg_replace('/^' . $path . '\//', '', $cleanPath);
+    }
 
     $params = array();
     list($path, $params['format']) = explode('.', $cleanPath);
@@ -88,8 +100,11 @@ class RestRoute implements IRouter {
     $params['data'] = $this->readInput();
     $params['query'] = $httpRequest->getQuery();
 
+    if (!is_null($this->module)) {
+        $presenterName = $this->module . ':' . $presenterName;
+    }
     $req = new Request(
-      $this->module . ':' . $presenterName,
+      $presenterName,
       $httpRequest->getMethod(),
       $params
     );
@@ -210,6 +225,9 @@ class RestRoute implements IRouter {
       return NULL;
     }
 
+    if (is_null($this->module)) {
+        return $url;
+    }
     return $refUrl->baseUrl . $url;
   }
 }
