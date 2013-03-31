@@ -29,6 +29,9 @@ class RestRoute implements IRouter {
   );
 
   /** @var string */
+  private $requestUrl;
+
+  /** @var string */
   protected $defaultFormat;
 
   const HTTP_HEADER_OVERRIDE = 'X-HTTP-Method-Override';
@@ -67,8 +70,9 @@ class RestRoute implements IRouter {
    * @return Request|NULL
    */
   public function match(IRequest $httpRequest) {
-    $basePath = str_replace('/', '\/', $httpRequest->getUrl()->getBasePath());
-    $cleanPath = preg_replace("/^{$basePath}/", '', $httpRequest->getUrl()->getPath());
+    $url = $httpRequest->getUrl();
+    $basePath = str_replace('/', '\/', $url->getBasePath());
+    $cleanPath = preg_replace("/^{$basePath}/", '', $url->getPath());
 
     $path = str_replace('/', '\/', $this->getPath());
     $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
@@ -105,6 +109,8 @@ class RestRoute implements IRouter {
     $params['query'] = $httpRequest->getQuery();
 
     $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
+
+    $this->requestUrl = $url->getAbsoluteUrl();
 
     $req = new Request(
       $presenterName,
@@ -200,44 +206,6 @@ class RestRoute implements IRouter {
    * @return string|NULL
    */
   public function constructUrl(Request $appRequest, Url $refUrl) {
-    $cleanPath = str_replace($refUrl->getBasePath(), '', $refUrl->getPath());
-
-    $url = $this->getPath() . '/';
-    $params = $appRequest->getParameters();
-
-    if(!isset($params['associations'])) {
-      return NULL;
-    }
-
-    foreach ($params['associations'] as $k => $v) {
-      $url .= $k . '/' . $v;
-    }
-
-    $resource = explode(':', $appRequest->getPresenterName());
-    $resource = end($resource);
-    $resource = strtolower($resource);
-    $url .= (count($params['associations']) ? '/' : '') . $resource;
-
-    if (!empty($params['id'])) {
-      $url .= '/' . $params['id'];
-    }
-
-    if(!isset($params['format'])) {
-      return NULL;
-    }
-
-    $url .= '.' . $params['format'];
-
-    if (count($params['query'])) {
-      $url .= '?' . http_build_query($params['query']);
-    }
-
-    $formats = implode('|', $this->formats);
-    $path = str_replace('/', '\/', $this->getPath());
-    if (!preg_match("/^{$path}\/.+\.({$formats})/", $url)) {
-      return NULL;
-    }
-
-    return $refUrl->baseUrl . $url;
+    return $this->requestUrl;
   }
 }
