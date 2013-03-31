@@ -22,6 +22,9 @@ class RestRoute implements IRouter {
   /** @var string */
   protected $module;
 
+  /** @var boolean */
+  protected $useReadAllAction;
+
   /** @var array */
   protected $formats = array(
     'json' => 'application/json',
@@ -45,6 +48,7 @@ class RestRoute implements IRouter {
 
     $this->module = $module;
     $this->defaultFormat = $defaultFormat;
+    $this->useReadAllAction = FALSE;
   }
 
   /**
@@ -90,6 +94,8 @@ class RestRoute implements IRouter {
     // Identificator.
     if (count($frags) % 2 === 0) {
       $params['id'] = array_pop($frags);
+    } elseif ($params['action'] == 'read' && $this->useReadAllAction) {
+      $params['action'] = 'readAll';
     }
     $presenterName = ucfirst(array_pop($frags));
 
@@ -196,6 +202,10 @@ class RestRoute implements IRouter {
    */
   protected function readInput() {
     return file_get_contents('php://input');
+  }
+
+  public function useReadAll() {
+    $this->useReadAllAction = TRUE;
   }
 
   /**

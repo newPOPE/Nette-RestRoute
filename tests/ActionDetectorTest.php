@@ -98,7 +98,20 @@ class ActionDetectorTest extends PHPUnit_Framework_TestCase {
     );
 
     $appRequest = $route->match($request);
+  }
 
-    $this->assertEquals($action, $appRequest->parameters['action']);
+  public function testReadAllActionInsteadOfRead() {
+    $route = new RestRoute('Api');
+    $route->useReadAll();
+
+    $url = new UrlScript();
+    $url->setPath('/api/foo');
+    $request = new Request(
+      $url, NULL, NULL, NULL, NULL, NULL, 'GET'
+    );
+
+    $appRequest = $route->match($request);
+
+    $this->assertEquals('readAll', $appRequest->parameters['action']);
   }
 }

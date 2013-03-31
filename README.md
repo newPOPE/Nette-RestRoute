@@ -64,6 +64,10 @@ associations = array(0)
 data = ""
 query = array(0)
 ```
+
+#### Flag ```readAll```
+If the flag ```$useReadAllAction``` is enabled ```$route->useReadAll()``` RestRoute generates ```readAll``` as action instead of ```read```. Nette will call ```Presenter::readAll``` instead of ```Presenter::read```.
+
 ---
 ### Resource ID
 **URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::read```  
