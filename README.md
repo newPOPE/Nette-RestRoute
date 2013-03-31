@@ -1,4 +1,5 @@
-# REST route for [Nette Framework](http://nette.org)
+# REST route for [Nette Framework](http://nette.org) 
+[![Build Status](https://travis-ci.org/newPOPE/Nette-RestRoute.png)](https://travis-ci.org/newPOPE/Nette-RestRoute)
 
 Route automatically maps CRUD to Presenters and actions in the defined module.
 And creates parameters which are accessible in Presenter.  
