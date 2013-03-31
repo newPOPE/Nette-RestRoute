@@ -10,6 +10,10 @@ And creates parameters which are accessible in Presenter.
 - data (raw data from the request)
 - query (an array of items from the query string)
 
+## Format detection:
+Variable ```$format``` is detected from HTTP header ```Accept```. If header is not present Route try detect format from the URL (```.../foo.json```). If no format is int the URL Route use a default format ```json```. 
+
+
 
 ## Usage:
 
@@ -17,7 +21,7 @@ And creates parameters which are accessible in Presenter.
 // $router is an instance of Nette\Application\Routers\RouteList  
 $router[] = new RestRoute(
 	'Api', // ApiModule
-	array('json') // allowed formats
+	[defaultFormat] //you can specify a default format. json or xml.
 );
 ```
 
@@ -35,7 +39,8 @@ Second parameter is an array with allowed formats.
 ## Examples
 
 ### Basic:
-**URL:** ```/api/users.json``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::read```   
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
 **Params:**  
@@ -48,7 +53,8 @@ query = array(0)
 ```
 ---
 ### Resource ID
-**URL:** ```/api/users/123.json``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
 **Params:**  
@@ -62,7 +68,8 @@ query = array(0)
 ```
 ---
 ### Query params:
-**URL:** ```/api/users.json?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
 **Params:**  
@@ -78,7 +85,8 @@ query = array(
 ```
 ---
 ### Create:
-**URL:** ```/api/users.json``` &rarr; ```\ApiModule\UsersPresenter::create```  
+**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::create```  
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** POST  
 **Request body:**  
 
@@ -101,7 +109,8 @@ query = array(0)
 ```
 ---
 ### Update:
-**URL:** ```/api/users/123.json``` &rarr; ```\ApiModule\UsersPresenter::update```  
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::update```
+**HTTP HEADER Accept:** ```application/json```    
 **Method:** PUT  
 **Request body:**  
 
@@ -125,7 +134,8 @@ query = array(0)
 ```
 ---
 ### Delete:
-**URL:** ```/api/users/123.json``` &rarr; ```\ApiModule\UsersPresenter::delete```  
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::delete``` 
+**HTTP HEADER Accept:** ```application/json```   
 **Method:** DELETE  
 **Request body:** Empty  
 **Params:**  
@@ -141,7 +151,8 @@ query = array(0)
 ### Associations:
 Last item (pair) before .<format> is main resource. Everything what is before the last item are associations ([apigee.com](http://apigee.com/about/)).
 
-**URL:** ```/api/users/1/comments.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/1/comments``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
 **Params:**  
@@ -155,7 +166,8 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/api/users/123/comments/456.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/123/comments/456``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
 **Params:**  
@@ -170,7 +182,8 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/api/users/1/blogs/2/comments.json``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/1/blogs/2/comments``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
 **Params:**  
@@ -205,4 +218,4 @@ Example:
 ```
 
 ## TODO:
-- Tests
+- add 
