@@ -12,8 +12,6 @@ use Nette\Utils\Strings;
 
 /**
  * @autor Adam Štipák <adam.stipak@gmail.com>
- *
- * @property-read array $defaults
  */
 class RestRoute implements IRouter {
 
