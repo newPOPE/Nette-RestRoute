@@ -12,5 +12,9 @@
   ],
   "autoload": {
     "classmap": ["src/RestRoute.php"]
+  },
+  "require-dev": {
+    "nette/nette": "2.0.10",
+    "phpunit/phpunit": "3.7.*"
   }
 }

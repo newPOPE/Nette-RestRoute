@@ -3,15 +3,17 @@
 namespace AdamStipak;
 
 use Nette\Application\IRouter;
-use Nette\NotImplementedException;
-use Nette\InvalidStateException;
+use Nette\InvalidArgumentException;
 use Nette\Http\Request as HttpRequest;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
+use Nette\Utils\Strings;
 
 /**
  * @autor Adam Štipák <adam.stipak@gmail.com>
+ *
+ * @property-read array $defaults
  */
 class RestRoute implements IRouter {
 
@@ -22,15 +24,32 @@ class RestRoute implements IRouter {
   protected $module;
 
   /** @var array */
-  protected $formats = array('json');
+  protected $formats = array(
+    'json' => 'application/json',
+    'xml'  => 'application/xml',
+  );
+
+  /** @var string */
+  protected $defaultFormat;
 
   const HTTP_HEADER_OVERRIDE = 'X-HTTP-Method-Override';
 
   const QUERY_PARAM_OVERRIDE = '__method';
 
-  public function __construct($module, array $formats) {
+  public function __construct($module, $defaultFormat = 'json') {
+    if(!array_key_exists($defaultFormat, $this->formats)) {
+      throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
+    }
+
     $this->module = $module;
-    $this->formats = $formats;
+    $this->defaultFormat = $defaultFormat;
+  }
+
+  /**
+   * @return string
+   */
+  public function getDefaultFormat() {
+    return $this->defaultFormat;
   }
 
   /**
@@ -54,17 +73,16 @@ class RestRoute implements IRouter {
     $basePath = str_replace('/', '\/', $httpRequest->getUrl()->getBasePath());
     $cleanPath = preg_replace("/^{$basePath}/", '', $httpRequest->getUrl()->getPath());
 
-    $formats = implode('|', $this->formats);
     $path = str_replace('/', '\/', $this->getPath());
-    if (!preg_match("/^{$path}\/.+\.({$formats})$/", $cleanPath)) {
+    if (!preg_match("/^{$path}\/.*$/", $cleanPath)) {
       return NULL;
     }
 
     $cleanPath = preg_replace('/^' . $path . '\//', '', $cleanPath);
 
     $params = array();
-    list($path, $params['format']) = explode('.', $cleanPath);
-    $this->checkFormat($params['format']);
+    $path = $cleanPath;
+//    $this->checkFormat($params['format']);
     $params['action'] = $this->detectAction($httpRequest);
     $frags = explode('/', $path);
 
@@ -84,6 +102,7 @@ class RestRoute implements IRouter {
       }
     }
 
+    $params['format'] = $this->detectFormat($httpRequest);
     $params['associations'] = $assoc;
     $params['data'] = $this->readInput();
     $params['query'] = $httpRequest->getQuery();
@@ -143,18 +162,28 @@ class RestRoute implements IRouter {
   }
 
   /**
-   * @param $path
-   * @throws \Nette\NotImplementedException
+   * @param \Nette\Http\Request $request
    * @return string
    */
-  protected function checkFormat($path) {
-    $frags = explode('.', $path);
-    $format = end($frags);
-
-    if (!in_array($format, $this->formats)) {
-      throw new NotImplementedException("Format {$format} is not supported.");
+  private function detectFormat(HttpRequest $request) {
+    $header = $request->getHeader('Accept'); // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
+    foreach ($this->formats as $k => $v) {
+      $v = Strings::replace($v, '/\//', '\/');
+      if(Strings::match($header, "/{$v}/")) {
+        return $k;
+      }
     }
-    return $format;
+
+    // Try retrieve fallback from URL.
+    $path = $request->getUrl()->getPath();
+    $formats = array_keys($this->formats);
+    $formats = implode('|', $formats);
+    if(Strings::match($path, "/\.({$formats})$/")) {
+      list($path, $format) = explode('.', $path);
+      return $format;
+    }
+
+    return $this->defaultFormat;
   }
 
   /**
