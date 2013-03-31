@@ -8,6 +8,7 @@ use Nette\Http\Request as HttpRequest;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
+use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
 /**
@@ -80,7 +81,6 @@ class RestRoute implements IRouter {
 
     $params = array();
     $path = $cleanPath;
-//    $this->checkFormat($params['format']);
     $params['action'] = $this->detectAction($httpRequest);
     $frags = explode('/', $path);
 
