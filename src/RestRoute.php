@@ -22,6 +22,9 @@ class RestRoute implements IRouter {
   /** @var string */
   protected $module;
 
+  /** @var boolean */
+  protected $useReadAll;
+
   /** @var array */
   protected $formats = array(
     'json' => 'application/json',
@@ -35,13 +38,14 @@ class RestRoute implements IRouter {
 
   const QUERY_PARAM_OVERRIDE = '__method';
 
-  public function __construct($module, $defaultFormat = 'json') {
+  public function __construct($module, $defaultFormat = 'json', $useReadAll = false) {
     if(!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
 
     $this->module = $module;
     $this->defaultFormat = $defaultFormat;
+    $this->useReadAll = $useReadAll;
   }
 
   /**
@@ -87,6 +91,8 @@ class RestRoute implements IRouter {
     // Identificator.
     if (count($frags) % 2 === 0) {
       $params['id'] = array_pop($frags);
+    } elseif ($params['action'] == 'read' && $this->useReadAll) {
+      $params['action'] = 'readAll';
     }
     $presenterName = ucfirst(array_pop($frags));
 
