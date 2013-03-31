@@ -18,23 +18,36 @@ Variable ```$format``` is detected from HTTP header ```Accept```. If header is n
 ## Usage:
 
 ```
+use AdamStipak\RestRoute;
+
 // $router is an instance of Nette\Application\Routers\RouteList  
-$router[] = new RestRoute(
-	'Api', // ApiModule
-	[defaultFormat] //you can specify a default format. json or xml.
-);
+
+// No parameters needed. Presenter name will be generated.
+$router[] = new RestRoute;
+
+// With module.
+$router[] = new RestRoute('Api');
+
+// With module and xml as a default format.
+$router[] = new RestRoute('Api', 'xml');
 ```
+
 
 First parameter is a name of the module where the route will sends an Request. URL prefix will be generated. See examples.
 ####Examples:
  
 ```
-'Api' => /api/<generated presenter name>
-'My:Api' => /my/api/<generated presenter name>
+NULL      => /<generated presenter name>
+'Api'     => /api/<generated presenter name>
+'My:Api'  => /my/api/<generated presenter name>
 ...
 ```
 
-Second parameter is an array with allowed formats.
+Second parameter is a default format. By default the default format is ```json```.
+RestRoute support only 2 formats:  
+
+- json *(default)*  
+- xml
 
 ## Examples
 
@@ -218,4 +231,8 @@ Example:
 ```
 
 ## TODO:
-- add 
+- refactor ```::match```
+- presenter detector tests
+- query params tests
+- associations tests
+- id tests

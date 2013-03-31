@@ -13,15 +13,15 @@ class ActionDetectorTest extends PHPUnit_Framework_TestCase {
    * @dataProvider getActions
    */
   public function testAction($method, $action) {
-    $route = new RestRoute('Api');
+    $route = new RestRoute();
 
     $url = new UrlScript();
-    $url->setPath('/api/foo');
+    $url->setPath('/foo');
     $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
 
     $appRequest = $route->match($request);
 
-    $this->assertEquals('Api:Foo', $appRequest->getPresenterName());
+    $this->assertEquals('Foo', $appRequest->getPresenterName());
     $this->assertEquals($action, $appRequest->parameters['action']);
   }
 

@@ -4,6 +4,10 @@ use AdamStipak\RestRoute;
 
 class RestRouteTest extends PHPUnit_Framework_TestCase {
 
+  public function testConstructorWithNoModule(){
+    $route = new RestRoute;
+  }
+
   public function testConstructorWithEmptyDefaultFormat() {
     $route = new RestRoute('Api');
   }

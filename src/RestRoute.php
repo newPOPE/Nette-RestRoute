@@ -35,7 +35,7 @@ class RestRoute implements IRouter {
 
   const QUERY_PARAM_OVERRIDE = '__method';
 
-  public function __construct($module, $defaultFormat = 'json') {
+  public function __construct($module = NULL, $defaultFormat = 'json') {
     if(!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
@@ -55,12 +55,10 @@ class RestRoute implements IRouter {
    * @return string
    */
   public function getPath() {
-    if (!$this->path) {
-      $path = implode('/', explode(':', $this->module));
-      $this->path = strtolower($path);
-    }
+    $path = implode('/', explode(':', $this->module));
+    $this->path = strtolower($path);
 
-    return $this->path;
+    return (string) $this->path;
   }
 
   /**
@@ -73,7 +71,8 @@ class RestRoute implements IRouter {
     $cleanPath = preg_replace("/^{$basePath}/", '', $httpRequest->getUrl()->getPath());
 
     $path = str_replace('/', '\/', $this->getPath());
-    if (!preg_match("/^{$path}\/.*$/", $cleanPath)) {
+    $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
+    if (!preg_match($pathRexExp, $cleanPath)) {
       return NULL;
     }
 
@@ -105,8 +104,10 @@ class RestRoute implements IRouter {
     $params['data'] = $this->readInput();
     $params['query'] = $httpRequest->getQuery();
 
+    $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
+
     $req = new Request(
-      $this->module . ':' . $presenterName,
+      $presenterName,
       $httpRequest->getMethod(),
       $params
     );
