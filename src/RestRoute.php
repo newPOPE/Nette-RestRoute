@@ -118,13 +118,13 @@ class RestRoute implements IRouter {
 
     $this->requestUrl = $url->getAbsoluteUrl();
 
-    $req = new Request(
+    $appRequest = new Request(
       $presenterName,
       $httpRequest->getMethod(),
       $params
     );
 
-    return $req;
+    return $appRequest;
   }
 
   protected function detectAction(HttpRequest $request) {
