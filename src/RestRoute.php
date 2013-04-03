@@ -116,6 +116,7 @@ class RestRoute implements IRouter {
 
     $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
 
+    // Remember absolute URL for ::constructUrl(). It is one way route ;-).
     $this->requestUrl = $url->getAbsoluteUrl();
 
     $appRequest = new Request(
