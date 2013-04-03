@@ -211,7 +211,7 @@ class RestRoute implements IRouter {
 
   /**
    * Constructs absolute URL from Request object.
-   * @param Request $appRequest
+   * @param \Nette\Application\Request $appRequest
    * @param \Nette\Http\Url $refUrl
    * @throws \Nette\NotImplementedException
    * @return string|NULL
