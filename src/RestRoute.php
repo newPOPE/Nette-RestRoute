@@ -71,7 +71,7 @@ class RestRoute implements IRouter {
   /**
    * Maps HTTP request to a Request object.
    * @param \Nette\Http\IRequest $httpRequest
-   * @return Request|NULL
+   * @return \Nette\Application\Request|NULL
    */
   public function match(IRequest $httpRequest) {
     $url = $httpRequest->getUrl();
