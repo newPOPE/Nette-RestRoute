@@ -181,10 +181,10 @@ class RestRoute implements IRouter {
    */
   private function detectFormat(HttpRequest $request) {
     $header = $request->getHeader('Accept'); // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
-    foreach ($this->formats as $k => $v) {
-      $v = Strings::replace($v, '/\//', '\/');
-      if(Strings::match($header, "/{$v}/")) {
-        return $k;
+    foreach ($this->formats as $format => $fullFormatName) {
+      $fullFormatName = Strings::replace($fullFormatName, '/\//', '\/');
+      if(Strings::match($header, "/{$fullFormatName}/")) {
+        return $format;
       }
     }
 
