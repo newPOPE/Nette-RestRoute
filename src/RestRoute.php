@@ -91,7 +91,7 @@ class RestRoute implements IRouter {
     $params['action'] = $this->detectAction($httpRequest);
     $frags = explode('/', $path);
 
-    // Identificator.
+    // Resource ID.
     if (count($frags) % 2 === 0) {
       $params['id'] = array_pop($frags);
     } elseif ($params['action'] == 'read' && $this->useReadAllAction) {
