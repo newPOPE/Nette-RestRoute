@@ -153,10 +153,12 @@ class RestRoute implements IRouter {
 
   /**
    * @param \Nette\Http\Request $request
+   *
    * @return string
    */
   protected function detectMethod(HttpRequest $request) {
-    if ($request->getMethod() !== 'POST') {
+    $requestMethod = $request->getMethod();
+    if ($requestMethod !== 'POST') {
       return $request->getMethod();
     }
 
@@ -170,7 +172,7 @@ class RestRoute implements IRouter {
       return strtoupper($method);
     }
 
-    return $request->getMethod();
+    return $requestMethod;
   }
 
   /**
