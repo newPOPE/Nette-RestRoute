@@ -99,6 +99,12 @@ class RestRoute implements IRouter {
     }
     $presenterName = ucfirst(array_pop($frags));
 
+    // Allow to use URLs like domain.tld/presenter.format.
+    $formats = join('|', array_keys($this->formats));
+    if (Strings::match($presenterName, "/.+\.({$formats})$/")) {
+        list($presenterName, $format) = explode('.', $presenterName);
+    }
+
     // Associations.
     $assoc = array();
     if (count($frags) > 0 && count($frags) % 2 === 0) {
