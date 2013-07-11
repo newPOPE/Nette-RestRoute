@@ -41,14 +41,14 @@ class RestRoute implements IRouter {
 
   const QUERY_PARAM_OVERRIDE = '__method';
 
-  public function __construct($module = NULL, $defaultFormat = 'json') {
+  public function __construct($module = NULL, $defaultFormat = 'json', $flagReadAll = false) {
     if(!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
 
     $this->module = $module;
     $this->defaultFormat = $defaultFormat;
-    $this->useReadAllAction = FALSE;
+    $this->useReadAllAction = (bool) $flagReadAll;
   }
 
   /**
