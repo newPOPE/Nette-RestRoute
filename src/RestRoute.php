@@ -213,8 +213,12 @@ class RestRoute implements IRouter {
     return file_get_contents('php://input');
   }
 
+  /**
+   * @return $this
+   */
   public function useReadAll() {
     $this->useReadAllAction = TRUE;
+    return $this;
   }
 
   /**
