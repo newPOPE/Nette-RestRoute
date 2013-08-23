@@ -229,6 +229,34 @@ class RestRoute implements IRouter {
    * @return string|NULL
    */
   public function constructUrl(Request $appRequest, Url $refUrl) {
-    return $this->requestUrl;
+//    dump($appRequest);
+//    dump($refUrl);
+    $params = $appRequest->getParameters();
+    $associations = @$params['associations']; // TODO add a validation
+    $query = @$params['query']; // TODO add a validation
+
+    // Module prefix not match.
+    if($this->module && !Strings::startsWith($appRequest->getPresenterName(), $this->module)) {
+      return NULL;
+    }
+
+    $requestFrags = explode(":", Strings::lower($appRequest->getPresenterName()));
+    $entityName = array_pop($requestFrags);
+    $url = implode("/",$requestFrags);
+    foreach ($associations as $name => $value) {
+      $url .= "/" . $name . "/" . $value;
+    }
+
+    $url .= "/".$entityName;
+    if(!empty($params['id'])) {
+      $url .= "/" . $params['id'];
+    }
+
+    // TODO Add format validation.
+    if(!empty($params['format'])) {
+      $url .= "." . $params['format'];
+    }
+
+    return $refUrl->getPath() . $url;
   }
 }
