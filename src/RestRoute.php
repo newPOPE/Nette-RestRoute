@@ -12,7 +12,7 @@ use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
 /**
- * @autor Adam Štipák <adam.stipak@gmail.com>
+ * @author Adam Štipák <adam.stipak@gmail.com>
  */
 class RestRoute implements IRouter {
 
