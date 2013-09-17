@@ -225,38 +225,46 @@ class RestRoute implements IRouter {
    * Constructs absolute URL from Request object.
    * @param \Nette\Application\Request $appRequest
    * @param \Nette\Http\Url $refUrl
-   * @throws \Nette\NotImplementedException
+   * @throws \Nette\InvalidStateException
    * @return string|NULL
    */
   public function constructUrl(Request $appRequest, Url $refUrl) {
-//    dump($appRequest);
-//    dump($refUrl);
-    $params = $appRequest->getParameters();
-    $associations = @$params['associations']; // TODO add a validation
-    $query = @$params['query']; // TODO add a validation
-
     // Module prefix not match.
     if($this->module && !Strings::startsWith($appRequest->getPresenterName(), $this->module)) {
       return NULL;
     }
 
-    $requestFrags = explode(":", Strings::lower($appRequest->getPresenterName()));
-    $entityName = array_pop($requestFrags);
-    $url = implode("/",$requestFrags);
-    foreach ($associations as $name => $value) {
-      $url .= "/" . $name . "/" . $value;
+    $parameters = $appRequest->getParameters();
+    $url = $refUrl->getHostUrl();
+    $urlStack = array();
+
+    // Module prefix.
+    $moduleFrags = explode(":", Strings::lower($appRequest->getPresenterName()));
+    $resourceName = array_pop($moduleFrags);
+    $urlStack += $moduleFrags;
+
+    // Associations.
+    if (isset($parameters['associations']) && is_array($parameters['associations'])) {
+      $associations = & $parameters['associations'];
+
+      if (count($associations) % 2 !== 0) {
+        throw new InvalidStateException("Number of associations is not even");
+      }
+
+      foreach ($associations as $key => $value) {
+        $urlStack[] = $key;
+        $urlStack[] = $value;
+      }
     }
 
-    $url .= "/".$entityName;
-    if(!empty($params['id'])) {
-      $url .= "/" . $params['id'];
+    // Resource.
+    $urlStack[] = Strings::lower($resourceName);
+
+    // Id.
+    if (isset($parameters['id']) && is_scalar($parameters['id'])) {
+      $urlStack[] = $parameters['id'];
     }
 
-    // TODO Add format validation.
-    if(!empty($params['format'])) {
-      $url .= "." . $params['format'];
-    }
-
-    return $refUrl->getPath() . $url;
+    return $url . '/' . implode('/', $urlStack);
   }
 }
