@@ -235,7 +235,7 @@ class RestRoute implements IRouter {
     }
 
     $parameters = $appRequest->getParameters();
-    $url = $refUrl->getHostUrl();
+    $url = $refUrl->getBaseUrl();
     $urlStack = array();
 
     // Module prefix.
@@ -265,6 +265,6 @@ class RestRoute implements IRouter {
       $urlStack[] = $parameters['id'];
     }
 
-    return $url . '/' . implode('/', $urlStack);
+    return $url . implode('/', $urlStack);
   }
 }
