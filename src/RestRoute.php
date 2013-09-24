@@ -225,10 +225,46 @@ class RestRoute implements IRouter {
    * Constructs absolute URL from Request object.
    * @param \Nette\Application\Request $appRequest
    * @param \Nette\Http\Url $refUrl
-   * @throws \Nette\NotImplementedException
+   * @throws \Nette\InvalidStateException
    * @return string|NULL
    */
   public function constructUrl(Request $appRequest, Url $refUrl) {
-    return $this->requestUrl;
+    // Module prefix not match.
+    if($this->module && !Strings::startsWith($appRequest->getPresenterName(), $this->module)) {
+      return NULL;
+    }
+
+    $parameters = $appRequest->getParameters();
+    $url = $refUrl->getBaseUrl();
+    $urlStack = array();
+
+    // Module prefix.
+    $moduleFrags = explode(":", Strings::lower($appRequest->getPresenterName()));
+    $resourceName = array_pop($moduleFrags);
+    $urlStack += $moduleFrags;
+
+    // Associations.
+    if (isset($parameters['associations']) && is_array($parameters['associations'])) {
+      $associations = & $parameters['associations'];
+
+      if (count($associations) % 2 !== 0) {
+        throw new InvalidStateException("Number of associations is not even");
+      }
+
+      foreach ($associations as $key => $value) {
+        $urlStack[] = $key;
+        $urlStack[] = $value;
+      }
+    }
+
+    // Resource.
+    $urlStack[] = Strings::lower($resourceName);
+
+    // Id.
+    if (isset($parameters['id']) && is_scalar($parameters['id'])) {
+      $urlStack[] = $parameters['id'];
+    }
+
+    return $url . implode('/', $urlStack);
   }
 }
