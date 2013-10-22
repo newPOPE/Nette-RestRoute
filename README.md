@@ -13,11 +13,16 @@ And creates parameters which are accessible in Presenter.
 ## Format detection:
 Variable ```$format``` is detected from HTTP header ```Accept```. If header is not present Route try detect format from the URL (```.../foo.json```). If no format is int the URL Route use a default format ```json```. 
 
+## Installation:
+The best way to install Nette-RestRoute is using  [Composer](http://getcomposer.org/):
 
+```sh
+$ composer require adamstipak/nette-rest-route
+```
 
 ## Usage:
 
-```
+```php
 use AdamStipak\RestRoute;
 
 // $router is an instance of Nette\Application\Routers\RouteList  
@@ -107,7 +112,7 @@ query = array(
 **Method:** POST  
 **Request body:**  
 
-```
+```json
 {
 	"foo": "bar",
 	"nested": {
@@ -131,7 +136,7 @@ query = array(0)
 **Method:** PUT  
 **Request body:**  
 
-```
+```json
 {
 	"foo": "bar",
 	"nested": {
