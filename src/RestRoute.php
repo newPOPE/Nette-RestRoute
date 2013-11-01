@@ -9,12 +9,13 @@ use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
 use Nette\InvalidStateException;
+use Nette\Object;
 use Nette\Utils\Strings;
 
 /**
  * @author Adam Štipák <adam.stipak@gmail.com>
  */
-class RestRoute implements IRouter {
+class RestRoute extends Object implements IRouter {
 
   /** @var string */
   protected $path;
@@ -30,9 +31,6 @@ class RestRoute implements IRouter {
     'json' => 'application/json',
     'xml'  => 'application/xml',
   );
-
-  /** @var string */
-  private $requestUrl;
 
   /** @var string */
   protected $defaultFormat;
@@ -121,9 +119,6 @@ class RestRoute implements IRouter {
     $params['query'] = $httpRequest->getQuery();
 
     $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
-
-    // Remember absolute URL for ::constructUrl(). It is one way route ;-).
-    $this->requestUrl = $url->getAbsoluteUrl();
 
     $appRequest = new Request(
       $presenterName,
