@@ -14,7 +14,7 @@
     "classmap": ["src/RestRoute.php"]
   },
   "require-dev": {
-    "nette/nette": "2.0.10",
+    "nette/nette": "2.0.*",
     "phpunit/phpunit": "3.7.*"
   }
 }
