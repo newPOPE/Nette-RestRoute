@@ -11,6 +11,7 @@ use Nette\Http\Url;
 use Nette\InvalidStateException;
 use Nette\Object;
 use Nette\Utils\Strings;
+use Nette\Utils\Validators;
 
 /**
  * @author Adam Štipák <adam.stipak@gmail.com>
@@ -239,7 +240,7 @@ class RestRoute extends Object implements IRouter {
     $urlStack += $moduleFrags;
 
     // Associations.
-    if (isset($parameters['associations']) && is_array($parameters['associations'])) {
+    if (isset($parameters['associations']) && Validators::is($parameters['associations'], 'array')) {
       $associations = & $parameters['associations'];
 
       if (count($associations) % 2 !== 0) {
@@ -256,7 +257,7 @@ class RestRoute extends Object implements IRouter {
     $urlStack[] = Strings::lower($resourceName);
 
     // Id.
-    if (isset($parameters['id']) && is_scalar($parameters['id'])) {
+    if (isset($parameters['id']) && Validators::is($parameters['id'], 'scalar')) {
       $urlStack[] = $parameters['id'];
     }
 
