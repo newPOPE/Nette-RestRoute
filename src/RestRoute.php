@@ -62,7 +62,7 @@ class RestRoute extends Object implements IRouter {
    */
   public function getPath() {
     $path = implode('/', explode(':', $this->module));
-    $this->path = strtolower($path);
+    $this->path = Strings::lower($path);
 
     return (string) $this->path;
   }
@@ -74,16 +74,16 @@ class RestRoute extends Object implements IRouter {
    */
   public function match(IRequest $httpRequest) {
     $url = $httpRequest->getUrl();
-    $basePath = str_replace('/', '\/', $url->getBasePath());
-    $cleanPath = preg_replace("/^{$basePath}/", '', $url->getPath());
+    $basePath = Strings::replace($url->getBasePath(), '/\//', '\/');
+    $cleanPath = Strings::replace($url->getPath(), "/^{$basePath}/");
 
-    $path = str_replace('/', '\/', $this->getPath());
+    $path = Strings::replace($this->getPath(), '/\//', '\/');
     $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
-    if (!preg_match($pathRexExp, $cleanPath)) {
+    if (!Strings::match($cleanPath, $pathRexExp)) {
       return NULL;
     }
 
-    $cleanPath = preg_replace('/^' . $path . '\//', '', $cleanPath);
+    $cleanPath = Strings::replace($cleanPath, '/^' . $path . '\//');
 
     $params = array();
     $path = $cleanPath;
@@ -96,7 +96,7 @@ class RestRoute extends Object implements IRouter {
     } elseif ($params['action'] == 'read' && $this->useReadAllAction) {
       $params['action'] = 'readAll';
     }
-    $presenterName = ucfirst(array_pop($frags));
+    $presenterName = Strings::firstUpper(array_pop($frags));
 
     // Allow to use URLs like domain.tld/presenter.format.
     $formats = join('|', array_keys($this->formats));
@@ -166,12 +166,12 @@ class RestRoute extends Object implements IRouter {
 
     $method = $request->getHeader(self::HTTP_HEADER_OVERRIDE);
     if(isset($method)) {
-      return strtoupper($method);
+      return Strings::upper($method);
     }
 
     $method = $request->getQuery(self::QUERY_PARAM_OVERRIDE);
     if(isset($method)) {
-      return strtoupper($method);
+      return Strings::upper($method);
     }
 
     return $requestMethod;
