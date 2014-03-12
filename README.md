@@ -131,7 +131,7 @@ query = array(0)
 ```
 ---
 ### Update:
-**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::update```
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::update```  
 **HTTP HEADER Accept:** ```application/json```    
 **Method:** PUT  
 **Request body:**  
@@ -156,7 +156,7 @@ query = array(0)
 ```
 ---
 ### Delete:
-**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::delete``` 
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::delete```  
 **HTTP HEADER Accept:** ```application/json```   
 **Method:** DELETE  
 **Request body:** Empty  
