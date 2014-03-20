@@ -44,18 +44,44 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function testWithModuleAndAssociations() {
+  public function createAssociations() {
+    return array(
+      array(
+        'associations' => array(
+          'foos' => 123,
+        ),
+        'result' => '/foos/123',
+      ),
+      array(
+        'associations' => array(
+          'foos' => 123,
+          'bars' => 234,
+        ),
+        'result' => '/foos/123/bars/234',
+      ),
+      array(
+        'associations' => array(
+          'foos'  => 123,
+          'bars'  => 234,
+          'beers' => 345,
+        ),
+        'result' => '/foos/123/bars/234/beers/345',
+      ),
+    );
+  }
+
+  /**
+   * @dataProvider createAssociations
+   */
+  public function testWithModuleAndAssociations($associations, $result) {
     $route = new RestRoute('Api');
 
     $appRequest = new Request(
       'Api:Resource',
       \Nette\Http\Request::GET,
       array(
-        'id' => 987,
-        'associations' => array(
-          'foos' => 123,
-          'bars' => 234,
-        )
+        'id'           => 987,
+        'associations' => $associations,
       )
     );
 
@@ -63,7 +89,7 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
 
     $url = $route->constructUrl($appRequest, $refUrl);
 
-    $expectedUrl = 'http://localhost/api/foos/123/bars/234/resource/987';
+    $expectedUrl = "http://localhost/api{$result}/resource/987";
     $this->assertEquals($expectedUrl, $url);
   }
 
