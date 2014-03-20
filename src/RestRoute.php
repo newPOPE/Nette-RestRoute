@@ -243,10 +243,6 @@ class RestRoute extends Object implements IRouter {
     if (isset($parameters['associations']) && Validators::is($parameters['associations'], 'array')) {
       $associations = & $parameters['associations'];
 
-      if (count($associations) % 2 !== 0) {
-        throw new InvalidStateException("Number of associations is not even");
-      }
-
       foreach ($associations as $key => $value) {
         $urlStack[] = $key;
         $urlStack[] = $value;
