@@ -112,4 +112,24 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $expectedUrl = 'http://localhost/base-path/resource/987';
     $this->assertEquals($expectedUrl, $url);
   }
+
+    public function testUrlOnSubdomain() {
+        $route = new RestRoute;
+
+        $appRequest = new Request(
+            'Resource',
+            \Nette\Http\Request::GET,
+            array(
+                'id' => 987,
+            )
+        );
+
+        $refUrl = new Url('http://api.foo.bar/base-path');
+        $refUrl->setPath('/base-path/');
+
+        $url = $route->constructUrl($appRequest, $refUrl);
+
+        $expectedUrl = 'http://api.foo.bar/base-path/resource/987';
+        $this->assertEquals($expectedUrl, $url);
+    }
 }
