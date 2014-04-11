@@ -238,10 +238,3 @@ Example:
 ```
 ?__method=(PUT|DELETE)
 ```
-
-## TODO:
-- refactor ```::match```
-- presenter detector tests
-- query params tests
-- associations tests
-- id tests
