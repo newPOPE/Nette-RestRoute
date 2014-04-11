@@ -124,12 +124,11 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
             )
         );
 
-        $refUrl = new Url('http://api.foo.bar/base-path');
-        $refUrl->setPath('/base-path/');
+        $refUrl = new Url('http://api.foo.bar');
 
         $url = $route->constructUrl($appRequest, $refUrl);
 
-        $expectedUrl = 'http://api.foo.bar/base-path/resource/987';
+        $expectedUrl = 'http://api.foo.bar/resource/987';
         $this->assertEquals($expectedUrl, $url);
     }
 }
