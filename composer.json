@@ -13,8 +13,10 @@
   "autoload": {
     "classmap": ["src/RestRoute.php"]
   },
+  "require": {
+    "nette/nette": "2.2.*"
+  },
   "require-dev": {
-    "nette/nette": "2.2.*",
     "phpunit/phpunit": "4.4.*"
   }
 }
