@@ -241,7 +241,8 @@ class RestRoute extends Object implements IRouter {
 
     // Associations.
     if (isset($parameters['associations']) && Validators::is($parameters['associations'], 'array')) {
-      $associations = & $parameters['associations'];
+      $associations = $parameters['associations'];
+      unset($parameters['associations']);
 
       foreach ($associations as $key => $value) {
         $urlStack[] = $key;
@@ -255,8 +256,18 @@ class RestRoute extends Object implements IRouter {
     // Id.
     if (isset($parameters['id']) && Validators::is($parameters['id'], 'scalar')) {
       $urlStack[] = $parameters['id'];
+      unset($parameters['id']);
     }
 
-    return $url . implode('/', $urlStack);
+    $url = $url . implode('/', $urlStack);
+
+    $sep = ini_get('arg_separator.input');
+    $query = http_build_query($parameters, '', $sep ? $sep[0] : '&');
+
+    if ($query != '') {
+      $url .= '?' . $query;
+    }
+
+    return $url;
   }
 }

@@ -131,4 +131,25 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
         $expectedUrl = 'http://api.foo.bar/resource/987';
         $this->assertEquals($expectedUrl, $url);
     }
+
+    public function testQueryParams() {
+      $route = new RestRoute;
+
+      $appRequest = new Request(
+        'Resource',
+        \Nette\Http\Request::GET,
+        array(
+          'id' => 987,
+          'foo' => 'bar',
+          'baz' => 'bay',
+        )
+      );
+
+      $refUrl = new Url('http://api.foo.bar');
+
+      $url = $route->constructUrl($appRequest, $refUrl);
+
+      $expectedUrl = 'http://api.foo.bar/resource/987?foo=bar&baz=bay';
+      $this->assertEquals($expectedUrl, $url);
+    }
 }
