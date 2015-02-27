@@ -69,11 +69,14 @@ class ActionDetectorTest extends PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $url->setPath('/api/foo');
-    $request = new Request($url,
+    $url->setQuery(
       array(
         '__method' => $method,
-      ),
-      NULL, NULL, NULL, NULL, 'POST'
+      )
+    );
+    $request = new Request(
+      $url,
+      NULL, NULL, NULL, NULL, NULL, 'POST'
     );
 
     $appRequest = $route->match($request);
@@ -90,11 +93,14 @@ class ActionDetectorTest extends PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $url->setPath('/api/foo');
-    $request = new Request($url,
+    $url->setQuery(
       array(
         '__method' => $method,
-      ),
-      NULL, NULL, NULL, NULL, 'POST'
+      )
+    );
+    $request = new Request(
+      $url,
+      NULL, NULL, NULL, NULL, NULL, 'POST'
     );
 
     $appRequest = $route->match($request);
