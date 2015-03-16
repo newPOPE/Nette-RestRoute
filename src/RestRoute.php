@@ -262,12 +262,15 @@ class RestRoute extends Object implements IRouter {
     $url = $url . implode('/', $urlStack);
 
     $sep = ini_get('arg_separator.input');
-    $query = http_build_query($parameters, '', $sep ? $sep[0] : '&');
 
-    if ($query != '') {
-      $url .= '?' . $query;
+    if(isset($parameters['query'])) {
+      $query = http_build_query($parameters['query'], '', $sep ? $sep[0] : '&');
+
+      if ($query != '') {
+        $url .= '?' . $query;
+      }  
     }
-
+    
     return $url;
   }
 }

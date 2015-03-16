@@ -140,8 +140,10 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
         \Nette\Http\Request::GET,
         array(
           'id' => 987,
-          'foo' => 'bar',
-          'baz' => 'bay',
+          'query' => array(
+            'foo' => 'bar',
+            'baz' => 'bay',
+          )
         )
       );
 
