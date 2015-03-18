@@ -57,7 +57,7 @@ RestRoute support only 2 formats:
 ## Examples
 
 ### Basic:
-**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::read```   
+**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::actionRead```   
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
@@ -71,11 +71,11 @@ query = array(0)
 ```
 
 #### Flag ```readAll```
-If the flag ```$useReadAllAction``` is enabled ```$route->useReadAll()``` RestRoute generates ```readAll``` as action instead of ```read```. Nette will call ```Presenter::readAll``` instead of ```Presenter::read```.
+If the flag ```$useReadAllAction``` is enabled ```$route->useReadAll()``` RestRoute generates ```actionReadAll``` as action instead of ```actionRead```. Nette will call ```Presenter::actionReadAll``` instead of ```Presenter::actionRead```.
 
 ---
 ### Resource ID
-**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionRead```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
@@ -90,7 +90,7 @@ query = array(0)
 ```
 ---
 ### Query params:
-**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::read```  
+**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::actionRead```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
@@ -107,7 +107,7 @@ query = array(
 ```
 ---
 ### Create:
-**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::create```  
+**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::actionCreate```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** POST  
 **Request body:**  
@@ -131,7 +131,7 @@ query = array(0)
 ```
 ---
 ### Update:
-**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::update```  
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionUpdate```  
 **HTTP HEADER Accept:** ```application/json```    
 **Method:** PUT  
 **Request body:**  
@@ -156,7 +156,7 @@ query = array(0)
 ```
 ---
 ### Delete:
-**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::delete```  
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionDelete```  
 **HTTP HEADER Accept:** ```application/json```   
 **Method:** DELETE  
 **Request body:** Empty  
@@ -173,7 +173,7 @@ query = array(0)
 ### Associations:
 Last item (pair) before .<format> is main resource. Everything what is before the last item are associations ([apigee.com](http://apigee.com/about/)).
 
-**URL:** ```/api/users/1/comments``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/1/comments``` &rarr; ```\ApiModule\CommentsPresenter::actionRead|actionCreate|actionUpdate|actionDelete```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
@@ -188,7 +188,7 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/api/users/123/comments/456``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/123/comments/456``` &rarr; ```\ApiModule\CommentsPresenter::actionRead|actionCreate|actionUpdate|actionDelete```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
@@ -204,7 +204,7 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/api/users/1/blogs/2/comments``` &rarr; ```\ApiModule\CommentsPresenter::read|create|update|delete```  
+**URL:** ```/api/users/1/blogs/2/comments``` &rarr; ```\ApiModule\CommentsPresenter::actionRead|actionCreate|actionUpdate|actionDelete```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
