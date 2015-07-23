@@ -29,6 +29,7 @@ class ActionDetectorTest extends PHPUnit_Framework_TestCase {
     return array(
       array('POST', 'create'),
       array('GET', 'read'),
+      array('PATCH', 'update'),
       array('PUT', 'update'),
       array('DELETE', 'delete'),
     );
@@ -36,6 +37,7 @@ class ActionDetectorTest extends PHPUnit_Framework_TestCase {
 
   public function getActionsForOverride() {
     return array(
+      array('PATCH', 'update'),
       array('PUT', 'update'),
       array('DELETE', 'delete'),
     );
