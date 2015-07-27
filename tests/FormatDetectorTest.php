@@ -1,10 +1,11 @@
 <?php
 
-use AdamStipak\RestRoute;
+namespace AdamStipak;
+
 use Nette\Http\Request;
 use Nette\Http\UrlScript;
 
-class FormatDetectorTest extends PHPUnit_Framework_TestCase {
+class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
   private function runDetectFormatMethod($route, $request) {
     $method = new Nette\Reflection\Method($route, 'detectFormat');
@@ -18,7 +19,8 @@ class FormatDetectorTest extends PHPUnit_Framework_TestCase {
     $url = new UrlScript();
     $request = new Request($url, NULL, NULL, NULL, NULL, array(
       'accept' => 'application/json',
-    ));
+    )
+    );
     $format = $this->runDetectFormatMethod($route, $request);
 
     $this->assertEquals('json', $format);
@@ -30,7 +32,8 @@ class FormatDetectorTest extends PHPUnit_Framework_TestCase {
     $url = new UrlScript();
     $request = new Request($url, NULL, NULL, NULL, NULL, array(
       'accept' => 'application/xml',
-    ));
+    )
+    );
     $format = $this->runDetectFormatMethod($route, $request);
 
     $this->assertEquals('xml', $format);
@@ -42,7 +45,8 @@ class FormatDetectorTest extends PHPUnit_Framework_TestCase {
     $url = new UrlScript();
     $request = new Request($url, NULL, NULL, NULL, NULL, array(
       'accept' => '*/*',
-    ));
+    )
+    );
     $format = $this->runDetectFormatMethod($route, $request);
 
     $this->assertEquals('json', $format);

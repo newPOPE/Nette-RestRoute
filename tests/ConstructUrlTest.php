@@ -1,6 +1,7 @@
 <?php
 
-use AdamStipak\RestRoute;
+namespace AdamStipak;
+
 use Nette\Application\Request;
 use Nette\Http\Url;
 
@@ -50,14 +51,14 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
         'associations' => array(
           'foos' => 123,
         ),
-        'result' => '/foos/123',
+        'result'       => '/foos/123',
       ),
       array(
         'associations' => array(
           'foos' => 123,
           'bars' => 234,
         ),
-        'result' => '/foos/123/bars/234',
+        'result'       => '/foos/123/bars/234',
       ),
       array(
         'associations' => array(
@@ -65,7 +66,7 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
           'bars'  => 234,
           'beers' => 345,
         ),
-        'result' => '/foos/123/bars/234/beers/345',
+        'result'       => '/foos/123/bars/234/beers/345',
       ),
     );
   }
@@ -113,45 +114,45 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-    public function testUrlOnSubdomain() {
-        $route = new RestRoute;
+  public function testUrlOnSubdomain() {
+    $route = new RestRoute;
 
-        $appRequest = new Request(
-            'Resource',
-            \Nette\Http\Request::GET,
-            array(
-                'id' => 987,
-            )
-        );
+    $appRequest = new Request(
+      'Resource',
+      \Nette\Http\Request::GET,
+      array(
+        'id' => 987,
+      )
+    );
 
-        $refUrl = new Url('http://api.foo.bar');
+    $refUrl = new Url('http://api.foo.bar');
 
-        $url = $route->constructUrl($appRequest, $refUrl);
+    $url = $route->constructUrl($appRequest, $refUrl);
 
-        $expectedUrl = 'http://api.foo.bar/resource/987';
-        $this->assertEquals($expectedUrl, $url);
-    }
+    $expectedUrl = 'http://api.foo.bar/resource/987';
+    $this->assertEquals($expectedUrl, $url);
+  }
 
-    public function testQueryParams() {
-      $route = new RestRoute;
+  public function testQueryParams() {
+    $route = new RestRoute;
 
-      $appRequest = new Request(
-        'Resource',
-        \Nette\Http\Request::GET,
-        array(
-          'id' => 987,
-          'query' => array(
-            'foo' => 'bar',
-            'baz' => 'bay',
-          )
+    $appRequest = new Request(
+      'Resource',
+      \Nette\Http\Request::GET,
+      array(
+        'id'    => 987,
+        'query' => array(
+          'foo' => 'bar',
+          'baz' => 'bay',
         )
-      );
+      )
+    );
 
-      $refUrl = new Url('http://api.foo.bar');
+    $refUrl = new Url('http://api.foo.bar');
 
-      $url = $route->constructUrl($appRequest, $refUrl);
+    $url = $route->constructUrl($appRequest, $refUrl);
 
-      $expectedUrl = 'http://api.foo.bar/resource/987?foo=bar&baz=bay';
-      $this->assertEquals($expectedUrl, $url);
-    }
+    $expectedUrl = 'http://api.foo.bar/resource/987?foo=bar&baz=bay';
+    $this->assertEquals($expectedUrl, $url);
+  }
 }

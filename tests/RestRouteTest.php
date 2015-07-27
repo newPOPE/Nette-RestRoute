@@ -1,13 +1,14 @@
 <?php
 
-use AdamStipak\RestRoute;
+namespace AdamStipak;
+
 use Nette\Http\UrlScript;
 use Nette\Http\Request;
 use Nette\Http\Url;
 
-class RestRouteTest extends PHPUnit_Framework_TestCase {
+class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
-  public function testConstructorWithNoModule(){
+  public function testConstructorWithNoModule() {
     $route = new RestRoute;
   }
 
@@ -22,7 +23,7 @@ class RestRouteTest extends PHPUnit_Framework_TestCase {
     $route = new RestRoute('Api', 'invalid');
   }
 
-  public function testConstructorWithXmlAsADefaultFormat(){
+  public function testConstructorWithXmlAsADefaultFormat() {
     $route = new RestRoute('Api', 'xml');
 
     $defaultFormat = $route->getDefaultFormat();

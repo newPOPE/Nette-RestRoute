@@ -1,10 +1,11 @@
 <?php
 
-use AdamStipak\RestRoute;
+namespace AdamStipak;
+
 use Nette\Http\UrlScript;
 use Nette\Http\Request;
 
-class ActionDetectorTest extends PHPUnit_Framework_TestCase {
+class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
 
   /**
    * @param $method
