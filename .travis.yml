@@ -10,4 +10,6 @@ before_script:
   - composer self-update
   - composer install --no-interaction --prefer-dist --dev
 
-script: "vendor/bin/phpunit --bootstrap=tests/bootstrap.php tests/"
+script:
+  - vendor/bin/phpcs --standard=PSR1 src/ tests/
+  - vendor/bin/phpunit
