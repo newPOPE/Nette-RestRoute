@@ -140,6 +140,7 @@ class RestRoute extends Object implements IRouter {
       case 'POST':
         $action = 'create';
         break;
+      case 'PATCH':
       case 'PUT':
         $action = 'update';
         break;
@@ -268,9 +269,9 @@ class RestRoute extends Object implements IRouter {
 
       if ($query != '') {
         $url .= '?' . $query;
-      }  
+      }
     }
-    
+
     return $url;
   }
 }
