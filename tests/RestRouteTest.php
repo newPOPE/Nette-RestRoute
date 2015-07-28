@@ -52,10 +52,9 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function testMatchAndConstructSpinalCaseUrl() {
+  public function testMatchAndConstructSpinalCaseUrlSingleResource() {
     $route = new RestRoute;
 
-    // Single resource
     $url = new UrlScript('http://localhost');
     $url->setPath('/re-source');
 
@@ -70,8 +69,11 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $expectedUrl = 'http://localhost/re-source';
     $this->assertEquals($expectedUrl, $url);
+  }
 
-    // Multiple level resource
+  public function testMatchAndConstructSpinalCaseUrlMultipleResource() {
+    $route = new RestRoute;
+
     $url = new UrlScript('http://localhost');
     $url->setPath('/first-level/123/second-level/456/re-source');
 
