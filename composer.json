@@ -14,9 +14,9 @@
     "psr-4": {"AdamStipak\\": "src/"}
   },
   "require": {
-    "nette/application": "~2.2",
-    "nette/http": "~2.2",
-    "nette/utils": "~2.2"
+    "nette/application": "~2.3",
+    "nette/http": "~2.3",
+    "nette/utils": "~2.3"
   },
   "require-dev": {
     "phpunit/phpunit": "4.4.*",
