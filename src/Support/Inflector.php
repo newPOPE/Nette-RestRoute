@@ -2,8 +2,8 @@
 
 namespace AdamStipak\Support;
 
-class Inflector
-{
+class Inflector {
+
   /**
    * Converts the given string to `camelCase`
    * @param string $string
