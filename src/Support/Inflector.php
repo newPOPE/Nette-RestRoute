@@ -2,16 +2,9 @@
 
 namespace AdamStipak\Support;
 
-class Inflector {
+use Nette\Utils\Strings;
 
-  /**
-   * Converts the given string to `camelCase`
-   * @param string $string
-   * @return string
-   */
-  public static function camelCase($string) {
-    return lcfirst(static::studlyCase($string));
-  }
+class Inflector {
 
   /**
    * Converts the given string to `StudlyCase`
@@ -19,8 +12,8 @@ class Inflector {
    * @return string
    */
   public static function studlyCase($string) {
-    $value = ucwords(str_replace(array('-', '_'), ' ', $string));
-    return str_replace(' ', '', $value);
+    $string = Strings::capitalize(Strings::replace($string, array('/-/', '/_/'), ' '));
+    return Strings::replace($string, '/ /');
   }
 
   /**
@@ -33,7 +26,7 @@ class Inflector {
     preg_match_all('/([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)/', $string, $matches);
     $matches = $matches[0];
     foreach ($matches as &$match) {
-      $match = ($match == strtoupper($match)) ? strtolower($match) : lcfirst($match);
+      $match = ($match == Strings::upper($match)) ? Strings::lower($match) : Strings::firstLower($match);
     }
     return implode('-', $matches);
   }
