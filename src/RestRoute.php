@@ -2,6 +2,7 @@
 
 namespace AdamStipak;
 
+use AdamStipak\Support\Inflector;
 use Nette\Application\IRouter;
 use Nette\InvalidArgumentException;
 use Nette\Http\Request as HttpRequest;
@@ -96,7 +97,7 @@ class RestRoute extends Object implements IRouter {
     } elseif ($params['action'] == 'read' && $this->useReadAllAction) {
       $params['action'] = 'readAll';
     }
-    $presenterName = Strings::firstUpper(array_pop($frags));
+    $presenterName = Inflector::studlyCase(array_pop($frags));
 
     // Allow to use URLs like domain.tld/presenter.format.
     $formats = join('|', array_keys($this->formats));
@@ -236,7 +237,8 @@ class RestRoute extends Object implements IRouter {
     $urlStack = array();
 
     // Module prefix.
-    $moduleFrags = explode(":", Strings::lower($appRequest->getPresenterName()));
+    $moduleFrags = explode(":", $appRequest->getPresenterName());
+    $moduleFrags = array_map('\AdamStipak\Support\Inflector::spinalCase', $moduleFrags);
     $resourceName = array_pop($moduleFrags);
     $urlStack += $moduleFrags;
 
@@ -252,7 +254,7 @@ class RestRoute extends Object implements IRouter {
     }
 
     // Resource.
-    $urlStack[] = Strings::lower($resourceName);
+    $urlStack[] = $resourceName;
 
     // Id.
     if (isset($parameters['id']) && Validators::is($parameters['id'], 'scalar')) {

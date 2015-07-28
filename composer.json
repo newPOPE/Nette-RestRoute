@@ -11,7 +11,7 @@
     }
   ],
   "autoload": {
-    "classmap": ["src/RestRoute.php"]
+    "psr-4": {"AdamStipak\\": "src/"}
   },
   "require": {
     "nette/application": "~2.2",

@@ -51,4 +51,40 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $expectedUrl = 'http://localhost/resource?access_token=foo-bar';
     $this->assertEquals($expectedUrl, $url);
   }
+
+  public function testMatchAndConstructSpinalCaseUrl() {
+    $route = new RestRoute;
+
+    // Single resource
+    $url = new UrlScript('http://localhost');
+    $url->setPath('/re-source');
+
+    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
+
+    $appRequest = $route->match($request);
+    $expectedPresenterName = 'ReSource';
+    $this->assertEquals($expectedPresenterName, $appRequest->getPresenterName());
+
+    $refUrl = new Url('http://localhost');
+    $url = $route->constructUrl($appRequest, $refUrl);
+
+    $expectedUrl = 'http://localhost/re-source';
+    $this->assertEquals($expectedUrl, $url);
+
+    // Multiple level resource
+    $url = new UrlScript('http://localhost');
+    $url->setPath('/first-level/123/second-level/456/re-source');
+
+    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
+
+    $appRequest = $route->match($request);
+    $expectedPresenterName = 'ReSource';
+    $this->assertEquals($expectedPresenterName, $appRequest->getPresenterName());
+
+    $refUrl = new Url('http://localhost');
+    $url = $route->constructUrl($appRequest, $refUrl);
+
+    $expectedUrl = 'http://localhost/first-level/123/second-level/456/re-source';
+    $this->assertEquals($expectedUrl, $url);
+  }
 }
