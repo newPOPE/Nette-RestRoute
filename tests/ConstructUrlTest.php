@@ -68,6 +68,12 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
         ),
         'result'       => '/foos/123/bars/234/beers/345',
       ),
+      array(
+        'associations' => array(
+          'foos-bars'  => 123,
+        ),
+        'result'       => '/foos-bars/123',
+      )
     );
   }
 
