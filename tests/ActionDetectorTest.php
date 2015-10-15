@@ -36,6 +36,35 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     );
   }
 
+  /**
+   * @param $method
+   * @param $action
+   * @param $partial
+   *
+   * @dataProvider getPartialUpdateActions
+   */
+  public function testPartialUpdate($method, $action, $partial) {
+    $route = new RestRoute(null, 'json', false, $partial);
+
+    $url = new UrlScript();
+    $url->setPath('/foo');
+    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
+
+    $appRequest = $route->match($request);
+
+    $this->assertEquals('Foo', $appRequest->getPresenterName());
+    $this->assertEquals($action, $appRequest->parameters['action']);
+  }
+
+  public function getPartialUpdateActions() {
+    return array(
+        array('PATCH', 'partialUpdate', true),
+        array('PUT', 'update', true),
+        array('PATCH', 'update', false),
+        array('PUT', 'update', false),
+    );
+  }
+
   public function getActionsForOverride() {
     return array(
       array('PATCH', 'update'),

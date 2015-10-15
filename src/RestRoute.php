@@ -41,7 +41,12 @@ class RestRoute extends Object implements IRouter {
 
   const QUERY_PARAM_OVERRIDE = '__method';
 
-  public function __construct($module = NULL, $defaultFormat = 'json', $flagReadAll = FALSE) {
+  /**
+   * @var bool
+   */
+  private $usePartialUpdate;
+
+  public function __construct($module = NULL, $defaultFormat = 'json', $flagReadAll = FALSE, $flagPartialUpdate = FALSE) {
     if(!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
@@ -49,6 +54,7 @@ class RestRoute extends Object implements IRouter {
     $this->module = $module;
     $this->defaultFormat = $defaultFormat;
     $this->useReadAllAction = (bool) $flagReadAll;
+    $this->usePartialUpdate = (bool) $flagPartialUpdate;
   }
 
   /**
@@ -142,6 +148,10 @@ class RestRoute extends Object implements IRouter {
         $action = 'create';
         break;
       case 'PATCH':
+        if ($this->usePartialUpdate) {
+          $action = 'partialUpdate';
+          break;
+        }
       case 'PUT':
         $action = 'update';
         break;
@@ -216,6 +226,14 @@ class RestRoute extends Object implements IRouter {
    */
   public function useReadAll() {
     $this->useReadAllAction = TRUE;
+    return $this;
+  }
+
+  /**
+   * @return $this
+   */
+  public function usePartialUpdate() {
+    $this->usePartialUpdate = TRUE;
     return $this;
   }
 
