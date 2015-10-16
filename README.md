@@ -133,7 +133,7 @@ query = array(0)
 ### Update:
 **URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionUpdate```  
 **HTTP HEADER Accept:** ```application/json```    
-**Method:** PUT  
+**Method:** PUT, PATCH  
 **Request body:**  
 
 ```json
@@ -154,6 +154,10 @@ associations = array(0)
 data = {"foo": "bar", "nested": {"foo": "bar"}}
 query = array(0)
 ```
+
+#### Flag ```partialUpdate```
+If the flag ```$usePartialUpdate``` is enabled ```$route->usePartialUpdate()``` RestRoute generates ```actionPartialUpdate``` as action instead of ```actionUpdate``` when ```PATCH``` method is used. Nette will call ```Presenter::actionPartialUpdate``` instead of ```Presenter::actionUpdate```.
+
 ---
 ### Delete:
 **URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionDelete```  
