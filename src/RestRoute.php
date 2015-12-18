@@ -142,30 +142,22 @@ class RestRoute extends Object implements IRouter {
 
     switch ($method) {
       case 'GET':
-        $action = 'read';
-        break;
+        return 'read';
       case 'POST':
-        $action = 'create';
-        break;
+        return 'create';
       case 'PATCH':
         if ($this->usePartialUpdate) {
-          $action = 'partialUpdate';
-          break;
+          return'partialUpdate';
         }
       case 'PUT':
-        $action = 'update';
-        break;
+        return 'update';
       case 'DELETE':
-        $action = 'delete';
-        break;
+        return 'delete';
       case 'OPTIONS':
-        $action = 'options';
-        break;
+        return 'options';
       default:
         throw new InvalidStateException('Method ' . $method . ' is not allowed.');
     }
-
-    return $action;
   }
 
   /**
