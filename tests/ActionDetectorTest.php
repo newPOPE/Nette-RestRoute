@@ -33,6 +33,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
       array('PATCH', 'update'),
       array('PUT', 'update'),
       array('DELETE', 'delete'),
+      array('OPTIONS', 'options'),
     );
   }
 
