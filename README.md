@@ -174,6 +174,22 @@ data = ""
 query = array(0)
 ```
 ---
+### Options:
+For more about OPTIONS documentation see [w3.org](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html#sec9.2).
+
+**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::actionOptions```  
+**HTTP HEADER Accept:** ```application/json```   
+**Method:** OPTIONS  
+**Request body:** Empty  
+**Params:**  
+
+```
+format = json
+associations = array(0)
+data = ""
+query = array(0)
+```
+---
 ### Associations:
 Last item (pair) before .<format> is main resource. Everything what is before the last item are associations ([apigee.com](http://apigee.com/about/)).
 
