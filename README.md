@@ -11,7 +11,7 @@ And creates parameters which are accessible in Presenter.
 - query (an array of items from the query string)
 
 ## Format detection:
-Variable ```$format``` is detected from HTTP header ```Accept```. If header is not present Route try detect format from the URL (```.../foo.json```). If no format is int the URL Route use a default format ```json```. 
+Variable ```$format``` is detected from HTTP header ```Accept```. If header is not present Route try detect format from the URL (```.../foo.json```). If no format is in the URL Route use a default format ```json```.
 
 ## Installation:
 The best way to install Nette-RestRoute is using  [Composer](http://getcomposer.org/):
@@ -48,7 +48,7 @@ NULL      => /<generated presenter name>
 ...
 ```
 
-Second parameter is a default format. By default the default format is ```json```.
+Second parameter is default format. By default the default format is ```json```.
 RestRoute support only 2 formats:  
 
 - json *(default)*  
