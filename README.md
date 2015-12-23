@@ -57,7 +57,7 @@ RestRoute support only 2 formats:
 ## Examples
 
 ### Basic:
-**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::actionRead```   
+**URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::actionReadAll```   
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
@@ -70,8 +70,8 @@ data = ""
 query = array(0)
 ```
 
-#### Flag ```readAll```
-If the flag ```$useReadAllAction``` is enabled ```$route->useReadAll()``` RestRoute generates ```actionReadAll``` as action instead of ```actionRead```. Nette will call ```Presenter::actionReadAll``` instead of ```Presenter::actionRead```.
+> Flag ```readAll``` was dropped and `Route` automatically generate action `readAll` if no Resource ID was not found in the URL.
+
 
 ---
 ### Resource ID
@@ -133,7 +133,7 @@ query = array(0)
 ### Update:
 **URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionUpdate```  
 **HTTP HEADER Accept:** ```application/json```    
-**Method:** PUT, PATCH  
+**Method:** PUT  
 **Request body:**  
 
 ```json
@@ -155,8 +155,31 @@ data = {"foo": "bar", "nested": {"foo": "bar"}}
 query = array(0)
 ```
 
-#### Flag ```partialUpdate```
-If the flag ```$usePartialUpdate``` is enabled ```$route->usePartialUpdate()``` RestRoute generates ```actionPartialUpdate``` as action instead of ```actionUpdate``` when ```PATCH``` method is used. Nette will call ```Presenter::actionPartialUpdate``` instead of ```Presenter::actionUpdate```.
+---
+### Partial update:
+**URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionPartialUpdate```  
+**HTTP HEADER Accept:** ```application/json```    
+**Method:** PATCH  
+**Request body:**  
+
+```json
+{
+	"foo": "bar",
+	"nested": {
+		"foo": "bar"	
+	}
+}
+```
+  
+**Params:**  
+
+```
+format = json
+id = 123
+associations = array(0)
+data = {"foo": "bar", "nested": {"foo": "bar"}}
+query = array(0)
+```
 
 ---
 ### Delete:
@@ -241,20 +264,20 @@ data = ""
 query = array(0)
 ```
 
-##Overriding methods PUT, DELETE
+##Overriding methods PUT, PATCH, DELETE
 
-Methods ```PUT``` and ```DELETE``` can be overriden via:  
+Methods ```PUT```, ```PATCH``` and ```DELETE``` can be overriden via:  
 
 ### HTTP header ```X-HTTP-Method-Override```
 Example:
 
 ```
-X-HTTP-Method-Override: (PUT|DELETE)
+X-HTTP-Method-Override: <PUT|PATCH|DELETE>
 ```
 
 ### Query param ```__method```
 Example:
 
 ```
-?__method=(PUT|DELETE)
+?__method=<PUT|PATCH|DELETE>
 ```

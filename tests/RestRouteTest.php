@@ -89,4 +89,39 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $expectedUrl = 'http://localhost/first-level/123/second-level/456/re-source';
     $this->assertEquals($expectedUrl, $url);
   }
+
+  /**
+   * @dataProvider getActions
+   */
+  public function testDefault($method, $path, $action, $id = null,  $associations = null) {
+    $route = new RestRoute();
+
+    $url = new UrlScript();
+    $url->setPath($path);
+    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
+
+    $appRequest = $route->match($request);
+
+    $this->assertEquals('Foo', $appRequest->getPresenterName());
+    $this->assertEquals($action, $appRequest->parameters['action']);
+
+    if($id) {
+      $this->assertEquals($id, $appRequest->parameters['id']);
+    }
+    if($associations) {
+      $this->assertSame($associations, $appRequest->parameters['associations']);
+    }
+  }
+
+  public function getActions() {
+    return [
+      ['POST', '/foo', 'create'],
+      ['GET', '/foo', 'readAll'],
+      ['GET', '/foo/1', 'read', 1],
+      ['PATCH', '/foo', 'partialUpdate'],
+      ['PUT', '/foo', 'update'],
+      ['DELETE', '/foo', 'delete'],
+      ['OPTIONS', '/foo', 'options'],
+    ];
+  }
 }

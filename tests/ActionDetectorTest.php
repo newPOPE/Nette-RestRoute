@@ -29,49 +29,20 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
   public function getActions() {
     return [
       ['POST', 'create'],
-      ['GET', 'read'],
-      ['PATCH', 'update'],
+      ['GET', 'readAll'],
+      ['PATCH', 'partialUpdate'],
       ['PUT', 'update'],
       ['DELETE', 'delete'],
       ['OPTIONS', 'options'],
     ];
   }
 
-  /**
-   * @param $method
-   * @param $action
-   * @param $partial
-   *
-   * @dataProvider getPartialUpdateActions
-   */
-  public function testPartialUpdate($method, $action, $partial) {
-    $route = new RestRoute(null, 'json', false, $partial);
-
-    $url = new UrlScript();
-    $url->setPath('/foo');
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
-
-    $appRequest = $route->match($request);
-
-    $this->assertEquals('Foo', $appRequest->getPresenterName());
-    $this->assertEquals($action, $appRequest->parameters['action']);
-  }
-
-  public function getPartialUpdateActions() {
-    return array(
-        array('PATCH', 'partialUpdate', true),
-        array('PUT', 'update', true),
-        array('PATCH', 'update', false),
-        array('PUT', 'update', false),
-    );
-  }
-
   public function getActionsForOverride() {
-    return array(
-      array('PATCH', 'update'),
-      array('PUT', 'update'),
-      array('DELETE', 'delete'),
-    );
+    return [
+      ['PATCH', 'partialUpdate'],
+      ['PUT', 'update'],
+      ['DELETE', 'delete'],
+    ];
   }
 
   /**
@@ -83,9 +54,9 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $url = new UrlScript();
     $url->setPath('/api/foo');
     $request = new Request($url, NULL, NULL, NULL, NULL,
-      array(
+      [
         'x-http-method-override' => $method,
-      ),
+      ],
       'POST'
     );
 
@@ -103,9 +74,9 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $url = new UrlScript();
     $url->setPath('/api/foo');
     $url->setQuery(
-      array(
+      [
         '__method' => $method,
-      )
+      ]
     );
     $request = new Request(
       $url,
@@ -127,9 +98,9 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $url = new UrlScript();
     $url->setPath('/api/foo');
     $url->setQuery(
-      array(
+      [
         '__method' => $method,
-      )
+      ]
     );
     $request = new Request(
       $url,
@@ -137,20 +108,5 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     );
 
     $appRequest = $route->match($request);
-  }
-
-  public function testReadAllActionInsteadOfRead() {
-    $route = new RestRoute('Api');
-    $route->useReadAll();
-
-    $url = new UrlScript();
-    $url->setPath('/api/foo');
-    $request = new Request(
-      $url, NULL, NULL, NULL, NULL, NULL, 'GET'
-    );
-
-    $appRequest = $route->match($request);
-
-    $this->assertEquals('readAll', $appRequest->parameters['action']);
   }
 }

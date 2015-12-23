@@ -5,7 +5,6 @@ namespace AdamStipak;
 use AdamStipak\Support\Inflector;
 use Nette\Application\IRouter;
 use Nette\InvalidArgumentException;
-use Nette\Http\Request as HttpRequest;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\Http\Url;
@@ -19,14 +18,15 @@ use Nette\Utils\Validators;
  */
 class RestRoute extends Object implements IRouter {
 
+  const HTTP_HEADER_OVERRIDE = 'X-HTTP-Method-Override';
+
+  const QUERY_PARAM_OVERRIDE = '__method';
+
   /** @var string */
   protected $path;
 
   /** @var string */
   protected $module;
-
-  /** @var boolean */
-  protected $useReadAllAction;
 
   /** @var array */
   protected $formats = [
@@ -37,24 +37,13 @@ class RestRoute extends Object implements IRouter {
   /** @var string */
   protected $defaultFormat;
 
-  const HTTP_HEADER_OVERRIDE = 'X-HTTP-Method-Override';
-
-  const QUERY_PARAM_OVERRIDE = '__method';
-
-  /**
-   * @var bool
-   */
-  private $usePartialUpdate;
-
-  public function __construct($module = NULL, $defaultFormat = 'json', $flagReadAll = FALSE, $flagPartialUpdate = FALSE) {
+  public function __construct($module = NULL, $defaultFormat = 'json') {
     if(!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
 
     $this->module = $module;
     $this->defaultFormat = $defaultFormat;
-    $this->useReadAllAction = (bool) $flagReadAll;
-    $this->usePartialUpdate = (bool) $flagPartialUpdate;
   }
 
   /**
@@ -100,7 +89,7 @@ class RestRoute extends Object implements IRouter {
     // Resource ID.
     if (count($frags) % 2 === 0) {
       $params['id'] = array_pop($frags);
-    } elseif ($params['action'] == 'read' && $this->useReadAllAction) {
+    } elseif ($params['action'] == 'read') {
       $params['action'] = 'readAll';
     }
     $presenterName = Inflector::studlyCase(array_pop($frags));
@@ -146,9 +135,7 @@ class RestRoute extends Object implements IRouter {
       case 'POST':
         return 'create';
       case 'PATCH':
-        if ($this->usePartialUpdate) {
-          return'partialUpdate';
-        }
+        return'partialUpdate';
       case 'PUT':
         return 'update';
       case 'DELETE':
@@ -214,22 +201,6 @@ class RestRoute extends Object implements IRouter {
    */
   protected function readInput() {
     return file_get_contents('php://input');
-  }
-
-  /**
-   * @return $this
-   */
-  public function useReadAll() {
-    $this->useReadAllAction = TRUE;
-    return $this;
-  }
-
-  /**
-   * @return $this
-   */
-  public function usePartialUpdate() {
-    $this->usePartialUpdate = TRUE;
-    return $this;
   }
 
   /**
