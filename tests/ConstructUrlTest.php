@@ -7,15 +7,15 @@ use Nette\Http\Url;
 
 class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
 
-  public function testNoModuleNoAssociations() {
+  public function testNoModuleNoAssociations () {
     $route = new RestRoute;
 
     $appRequest = new Request(
       'Resource',
       \Nette\Http\Request::GET,
-      array(
-        'id' => 987
-      )
+      [
+        'id' => 987,
+      ]
     );
 
     $refUrl = new Url('http://localhost/');
@@ -26,15 +26,15 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function testWithModuleNoAssociations() {
+  public function testWithModuleNoAssociations () {
     $route = new RestRoute('Api');
 
     $appRequest = new Request(
       'Api:Resource',
       \Nette\Http\Request::GET,
-      array(
-        'id' => 987
-      )
+      [
+        'id' => 987,
+      ]
     );
 
     $refUrl = new Url('http://localhost/');
@@ -45,51 +45,51 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function createAssociations() {
-    return array(
-      array(
-        'associations' => array(
+  public function createAssociations () {
+    return [
+      [
+        'associations' => [
           'foos' => 123,
-        ),
+        ],
         'result'       => '/foos/123',
-      ),
-      array(
-        'associations' => array(
+      ],
+      [
+        'associations' => [
           'foos' => 123,
           'bars' => 234,
-        ),
+        ],
         'result'       => '/foos/123/bars/234',
-      ),
-      array(
-        'associations' => array(
+      ],
+      [
+        'associations' => [
           'foos'  => 123,
           'bars'  => 234,
           'beers' => 345,
-        ),
+        ],
         'result'       => '/foos/123/bars/234/beers/345',
-      ),
-      array(
-        'associations' => array(
-          'foos-bars'  => 123,
-        ),
+      ],
+      [
+        'associations' => [
+          'foos-bars' => 123,
+        ],
         'result'       => '/foos-bars/123',
-      )
-    );
+      ],
+    ];
   }
 
   /**
    * @dataProvider createAssociations
    */
-  public function testWithModuleAndAssociations($associations, $result) {
+  public function testWithModuleAndAssociations ($associations, $result) {
     $route = new RestRoute('Api');
 
     $appRequest = new Request(
       'Api:Resource',
       \Nette\Http\Request::GET,
-      array(
+      [
         'id'           => 987,
         'associations' => $associations,
-      )
+      ]
     );
 
     $refUrl = new Url('http://localhost/');
@@ -100,15 +100,15 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function testDefaultsWithBasePath() {
+  public function testDefaultsWithBasePath () {
     $route = new RestRoute;
 
     $appRequest = new Request(
       'Resource',
       \Nette\Http\Request::GET,
-      array(
+      [
         'id' => 987,
-      )
+      ]
     );
 
     $refUrl = new Url('http://localhost/base-path');
@@ -120,15 +120,15 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function testUrlOnSubdomain() {
+  public function testUrlOnSubdomain () {
     $route = new RestRoute;
 
     $appRequest = new Request(
       'Resource',
       \Nette\Http\Request::GET,
-      array(
+      [
         'id' => 987,
-      )
+      ]
     );
 
     $refUrl = new Url('http://api.foo.bar');
@@ -139,19 +139,19 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function testQueryParams() {
+  public function testQueryParams () {
     $route = new RestRoute;
 
     $appRequest = new Request(
       'Resource',
       \Nette\Http\Request::GET,
-      array(
+      [
         'id'    => 987,
-        'query' => array(
+        'query' => [
           'foo' => 'bar',
           'baz' => 'bay',
-        )
-      )
+        ],
+      ]
     );
 
     $refUrl = new Url('http://api.foo.bar');

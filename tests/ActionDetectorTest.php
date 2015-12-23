@@ -27,14 +27,14 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function getActions() {
-    return array(
-      array('POST', 'create'),
-      array('GET', 'read'),
-      array('PATCH', 'update'),
-      array('PUT', 'update'),
-      array('DELETE', 'delete'),
-      array('OPTIONS', 'options'),
-    );
+    return [
+      ['POST', 'create'],
+      ['GET', 'read'],
+      ['PATCH', 'update'],
+      ['PUT', 'update'],
+      ['DELETE', 'delete'],
+      ['OPTIONS', 'options'],
+    ];
   }
 
   /**

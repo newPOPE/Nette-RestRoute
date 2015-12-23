@@ -36,9 +36,9 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $url = new UrlScript('http://localhost');
     $url->setPath('/resource');
     $url->setQuery(
-      array(
+      [
         'access_token' => 'foo-bar',
-      )
+      ]
     );
 
     $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');

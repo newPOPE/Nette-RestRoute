@@ -12,7 +12,7 @@ class Inflector {
    * @return string
    */
   public static function studlyCase($string) {
-    $string = Strings::capitalize(Strings::replace($string, array('/-/', '/_/'), ' '));
+    $string = Strings::capitalize(Strings::replace($string, ['/-/', '/_/'], ' '));
     return Strings::replace($string, '/ /');
   }
 

@@ -18,9 +18,9 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute('Api');
 
     $url = new UrlScript();
-    $request = new Request($url, NULL, NULL, NULL, NULL, array(
+    $request = new Request($url, NULL, NULL, NULL, NULL, [
       'accept' => 'application/json',
-    )
+      ]
     );
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -31,9 +31,9 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute('Api');
 
     $url = new UrlScript();
-    $request = new Request($url, NULL, NULL, NULL, NULL, array(
+    $request = new Request($url, NULL, NULL, NULL, NULL, [
       'accept' => 'application/xml',
-    )
+      ]
     );
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -44,9 +44,9 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute('Api');
 
     $url = new UrlScript();
-    $request = new Request($url, NULL, NULL, NULL, NULL, array(
+    $request = new Request($url, NULL, NULL, NULL, NULL, [
       'accept' => '*/*',
-    )
+      ]
     );
     $format = $this->runDetectFormatMethod($route, $request);
 

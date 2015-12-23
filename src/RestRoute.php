@@ -29,10 +29,10 @@ class RestRoute extends Object implements IRouter {
   protected $useReadAllAction;
 
   /** @var array */
-  protected $formats = array(
+  protected $formats = [
     'json' => 'application/json',
     'xml'  => 'application/xml',
-  );
+  ];
 
   /** @var string */
   protected $defaultFormat;
@@ -92,7 +92,7 @@ class RestRoute extends Object implements IRouter {
 
     $cleanPath = Strings::replace($cleanPath, '/^' . $path . '\//');
 
-    $params = array();
+    $params = [];
     $path = $cleanPath;
     $params['action'] = $this->detectAction($httpRequest);
     $frags = explode('/', $path);
@@ -108,11 +108,11 @@ class RestRoute extends Object implements IRouter {
     // Allow to use URLs like domain.tld/presenter.format.
     $formats = join('|', array_keys($this->formats));
     if (Strings::match($presenterName, "/.+\.({$formats})$/")) {
-        list($presenterName, $format) = explode('.', $presenterName);
+        list($presenterName) = explode('.', $presenterName);
     }
 
     // Associations.
-    $assoc = array();
+    $assoc = [];
     if (count($frags) > 0 && count($frags) % 2 === 0) {
       foreach ($frags as $k => $f) {
         if ($k % 2 !== 0) continue;
@@ -137,7 +137,7 @@ class RestRoute extends Object implements IRouter {
     return $appRequest;
   }
 
-  protected function detectAction(HttpRequest $request) {
+  protected function detectAction(IRequest $request) {
     $method = $this->detectMethod($request);
 
     switch ($method) {
@@ -161,11 +161,11 @@ class RestRoute extends Object implements IRouter {
   }
 
   /**
-   * @param \Nette\Http\Request $request
+   * @param IRequest $request
    *
    * @return string
    */
-  protected function detectMethod(HttpRequest $request) {
+  protected function detectMethod(IRequest $request) {
     $requestMethod = $request->getMethod();
     if ($requestMethod !== 'POST') {
       return $request->getMethod();
@@ -185,10 +185,10 @@ class RestRoute extends Object implements IRouter {
   }
 
   /**
-   * @param \Nette\Http\Request $request
+   * @param \Nette\Http\IRequest $request
    * @return string
    */
-  private function detectFormat(HttpRequest $request) {
+  private function detectFormat(IRequest $request) {
     $header = $request->getHeader('Accept'); // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
     foreach ($this->formats as $format => $fullFormatName) {
       $fullFormatName = Strings::replace($fullFormatName, '/\//', '\/');
@@ -247,7 +247,7 @@ class RestRoute extends Object implements IRouter {
 
     $parameters = $appRequest->getParameters();
     $url = $refUrl->getBaseUrl();
-    $urlStack = array();
+    $urlStack = [];
 
     // Module prefix.
     $moduleFrags = explode(":", $appRequest->getPresenterName());
