@@ -56,7 +56,7 @@ RestRoute support only 2 formats:
 
 ## Examples
 
-### Basic:
+### Read all:
 **URL:** ```/api/users``` &rarr; ```\ApiModule\UsersPresenter::actionReadAll```   
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
@@ -74,7 +74,7 @@ query = array(0)
 
 
 ---
-### Resource ID
+### Read with resource ID
 **URL:** ```/api/users/123``` &rarr; ```\ApiModule\UsersPresenter::actionRead```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
