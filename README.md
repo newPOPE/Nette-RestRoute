@@ -289,7 +289,7 @@ RestRoute is developed in [Docker](https://docker.com) container via `docker-com
 Example:  
 ```sh
 $ docker-compose run --rm default install  # install deps via composer
-$ docker-compose run --rm default  # runs the tests in container
+$ docker-compose run --rm default  # runs tests in container
 ```
 
 Attach to container:  
