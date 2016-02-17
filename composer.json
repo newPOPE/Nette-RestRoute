@@ -14,7 +14,7 @@
     "psr-4": {"AdamStipak\\": "src/"}
   },
   "require": {
-    "php": ">=5.6.0",
+    "php": "^5.6|^7.0",
     "nette/application": "~2.3",
     "nette/http": "~2.3",
     "nette/utils": "~2.3"
