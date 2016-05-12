@@ -120,7 +120,9 @@ class RestRoute extends Object implements IRouter {
     $appRequest = new Request(
       $presenterName,
       $httpRequest->getMethod(),
-      $params
+      $params,
+      [],
+      $httpRequest->getFiles()
     );
 
     return $appRequest;

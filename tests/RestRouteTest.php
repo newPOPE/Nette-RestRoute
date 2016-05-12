@@ -90,6 +90,19 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
+  public function testFileUpload() {
+    $route = new RestRoute;
+
+    $url = new UrlScript('http://localhost');
+    $url->setPath('/whatever');
+    $files = [ 'file1', 'file2', 'file3' ];
+
+    $request = new Request($url, NULL, NULL, $files, NULL, NULL, 'POST');
+
+    $appRequest = $route->match($request);
+    $this->assertEquals($files, $appRequest->getFiles());
+  }
+
   /**
    * @dataProvider getActions
    */
