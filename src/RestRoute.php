@@ -116,16 +116,14 @@ class RestRoute extends Object implements IRouter {
     $params['query'] = $httpRequest->getQuery();
 
     $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
-
-    $appRequest = new Request(
+    
+    return new Request(
       $presenterName,
       $httpRequest->getMethod(),
       $params,
       [],
       $httpRequest->getFiles()
     );
-
-    return $appRequest;
   }
 
   protected function detectAction(IRequest $request) {
