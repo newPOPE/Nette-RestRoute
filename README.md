@@ -264,6 +264,23 @@ data = ""
 query = array(0)
 ```
 
+---
+### File uploads:
+RestRoute reads standard [PHP input](https://github.com/newPOPE/Nette-RestRoute/blob/master/src/RestRoute.php#L202) and data puts to `$data` param in action. This is fit for one file upload or upload with chunks because it is a RAW data.
+
+For multiple file upload RestRoute just set files when creates [`\Nette\Application\Request`](https://github.com/newPOPE/Nette-RestRoute/blob/master/src/RestRoute.php#L125). In presenter just inject `\Nette\Application\Request` service and use these files.
+
+```php
+class FooPresenter {
+  /** @var \Nette\Application\Request @inject */
+  public $request;
+
+  public function actionCreate () {
+    $files = $this->request->getFiles();
+  }
+}
+``` 
+
 ##Overriding methods PUT, PATCH, DELETE
 
 Methods ```PUT```, ```PATCH``` and ```DELETE``` can be overriden via:  
