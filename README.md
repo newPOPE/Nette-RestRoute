@@ -90,7 +90,7 @@ query = array(0)
 ```
 ---
 ### Query params:
-**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::actionRead```  
+**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::actionReadAll```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
