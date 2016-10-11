@@ -28,6 +28,15 @@ class RestRoute extends Object implements IRouter {
   /** @var string */
   protected $module;
 
+  /** @var string */
+  protected $versionRegex;
+
+  /** @var boolean */
+  protected $useURLModuleVersioning = FALSE;
+
+  /** @var string */
+  protected $versionToModuleMapping;
+
   /** @var array */
   protected $formats = [
     'json' => 'application/json',
@@ -44,6 +53,18 @@ class RestRoute extends Object implements IRouter {
 
     $this->module = $module;
     $this->defaultFormat = $defaultFormat;
+  }
+
+  /**
+   * @param string $versionRegex
+   * @param array $moduleMapping
+   * @return $this
+   */
+  public function useURLModuleVersioning($versionRegex, array $moduleMapping) {
+    $this->useURLModuleVersioning = TRUE;
+    $this->versionRegex = $versionRegex;
+    $this->versionToModuleMapping = $moduleMapping;
+    return $this;
   }
 
   /**
@@ -86,6 +107,14 @@ class RestRoute extends Object implements IRouter {
     $params['action'] = $this->detectAction($httpRequest);
     $frags = explode('/', $path);
 
+    if ($this->useURLModuleVersioning) {
+      $version = array_shift($frags);
+      if (!Strings::match($version, $this->versionRegex)) {
+        array_unshift($frags, $version);
+        $version = NULL;
+      }
+    }
+
     // Resource ID.
     if (count($frags) % 2 === 0) {
       $params['id'] = array_pop($frags);
@@ -115,7 +144,15 @@ class RestRoute extends Object implements IRouter {
     $params['data'] = $this->readInput();
     $params['query'] = $httpRequest->getQuery();
 
-    $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
+    if ($this->useURLModuleVersioning) {
+      $suffix = $presenterName;
+      $presenterName = empty($this->module) ? "" : $this->module . ':';
+      $presenterName .= array_key_exists($version, $this->versionToModuleMapping)
+        ? $this->versionToModuleMapping[$version] . ":" . $suffix
+        : $this->versionToModuleMapping[NULL] . ":" . $suffix;
+    } else {
+      $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
+    }
     
     return new Request(
       $presenterName,
