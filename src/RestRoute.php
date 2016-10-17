@@ -18,9 +18,13 @@ use Nette\Utils\Validators;
  */
 class RestRoute extends Object implements IRouter {
 
-  const HTTP_HEADER_OVERRIDE = 'X-HTTP-Method-Override';
+  const METHOD_OVERRIDE_HTTP_HEADER = 'X-HTTP-Method-Override';
+  /** @deprecated */
+  const HTTP_HEADER_OVERRIDE = self::METHOD_OVERRIDE_HTTP_HEADER;
 
-  const QUERY_PARAM_OVERRIDE = '__method';
+  const METHOD_OVERRIDE_QUERY_PARAM = '__method';
+  /** @deprecated */
+  const QUERY_PARAM_OVERRIDE = self::METHOD_OVERRIDE_QUERY_PARAM;
 
   const MODULE_VERSION_PATH_PREFIX_PATTERN = '/v[0-9\.]+/';
 
@@ -197,12 +201,12 @@ class RestRoute extends Object implements IRouter {
       return $request->getMethod();
     }
 
-    $method = $request->getHeader(self::HTTP_HEADER_OVERRIDE);
+    $method = $request->getHeader(self::METHOD_OVERRIDE_HTTP_HEADER);
     if(isset($method)) {
       return Strings::upper($method);
     }
 
-    $method = $request->getQuery(self::QUERY_PARAM_OVERRIDE);
+    $method = $request->getQuery(self::METHOD_OVERRIDE_QUERY_PARAM);
     if(isset($method)) {
       return Strings::upper($method);
     }

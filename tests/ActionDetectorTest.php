@@ -55,7 +55,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $url->setPath('/api/foo');
     $request = new Request($url, NULL, NULL, NULL, NULL,
       [
-        'x-http-method-override' => $method,
+        RestRoute::METHOD_OVERRIDE_HTTP_HEADER => $method,
       ],
       'POST'
     );
@@ -75,7 +75,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $url->setPath('/api/foo');
     $url->setQuery(
       [
-        '__method' => $method,
+        RestRoute::METHOD_OVERRIDE_QUERY_PARAM => $method,
       ]
     );
     $request = new Request(
