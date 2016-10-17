@@ -126,6 +126,33 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     }
   }
 
+  /**
+   * @dataProvider getVersions
+   */
+  public function testModuleVersioning($module, $path, $expectedPresenterName, $expectedUrl) {
+    $route = new RestRoute($module);
+    $route->useURLModuleVersioning(
+      RestRoute::MODULE_VERSION_PATH_PREFIX_PATTERN,
+      [
+        NULL => 'V1',
+        'v1' => 'V1',
+        'v2' => 'V2'
+      ]
+  );
+
+    $url = new UrlScript();
+    $url->setPath($path);
+    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
+
+    $appRequest = $route->match($request);
+
+    $this->assertEquals($expectedPresenterName, $appRequest->getPresenterName());
+
+    $refUrl = new Url('http://localhost');
+    $url = $route->constructUrl($appRequest, $refUrl);
+    $this->assertEquals($expectedUrl, $url);
+  }
+
   public function getActions() {
     return [
       ['POST', '/foo', 'create'],
@@ -137,4 +164,15 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
       ['OPTIONS', '/foo', 'options'],
     ];
   }
+
+  public function getVersions() {
+    return [
+      [NULL, '/foo', 'V1:Foo', 'http://localhost/v1/foo'],
+      [NULL, '/v1/foo', 'V1:Foo', 'http://localhost/v1/foo'],
+      [NULL, '/v2/foo', 'V2:Foo', 'http://localhost/v2/foo'],
+      ['Api', '/api/foo', 'Api:V1:Foo', 'http://localhost/api/v1/foo'],
+      ['Api', '/api/v1/foo', 'Api:V1:Foo', 'http://localhost/api/v1/foo'],
+    ];
+  }
+
 }

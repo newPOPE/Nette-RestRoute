@@ -35,6 +35,17 @@ $router[] = new RestRoute('Api');
 
 // With module and xml as a default format.
 $router[] = new RestRoute('Api', 'xml');
+
+// With URL module versioning
+$router[] = (new RestRoute())
+    ->useURLModuleVersioning(
+        '/v[0-9\.]+/',     // Regex for URL version
+        [                  // URL fragment to module mapping
+          NULL => 'V1',    // Default version module is V1
+          'v1' => 'V1',    // /v1 to module V1
+          'v2' => 'V2'     // /v2 to module V2
+        ]
+    );
 ```
 
 
@@ -90,7 +101,7 @@ query = array(0)
 ```
 ---
 ### Query params:
-**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::actionRead```  
+**URL:** ```/api/users?foo=bar&page=1``` &rarr; ```\ApiModule\UsersPresenter::actionReadAll```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET  
 **Request body:** Empty  
@@ -262,6 +273,33 @@ associations = array(
 )
 data = ""
 query = array(0)
+```
+
+---
+### URL versioning:
+RestRoute provides you with option to version your API in URL. Each version is represented by separate module in your application.
+
+First, you define regexp which is used to detect if the version parameter is present in URL. It must be in the begging of the path.
+Then, you define version to module mapping. `NULL` key stands for default module, if version parameter doesn't get detected.
+
+```php
+$router[] = (new RestRoute('Api')) // Optional module
+    ->useURLModuleVersioning(
+        '/v[0-9\.]+/',     // Regex for URL version
+        [                  // URL fragment to module mapping
+          NULL => 'V1',    // Default version module is V1
+          'v1' => 'V1',    // /v1 to module V1
+          'v2' => 'V2'     // /v2 to module V2
+        ]
+    );
+```
+
+RestRoute will now map your requests to presenters like this (URL -> Presenter):
+
+```
+/api/foo        ->  Api:V1:Foo
+/api/v1/foo     ->  Api:V1:Foo
+/api/v2/foo     ->  Api:V2:Foo
 ```
 
 ---
