@@ -34,7 +34,7 @@ class RestRoute extends Object implements IRouter {
   /** @var boolean */
   protected $useURLModuleVersioning = FALSE;
 
-  /** @var string */
+  /** @var array */
   protected $versionToModuleMapping;
 
   /** @var array */
