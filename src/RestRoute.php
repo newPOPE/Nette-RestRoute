@@ -22,6 +22,8 @@ class RestRoute extends Object implements IRouter {
 
   const QUERY_PARAM_OVERRIDE = '__method';
 
+  const MODULE_VERSION_PATH_PREFIX_PATTERN = '/v[0-9\.]+/';
+
   /** @var string */
   protected $path;
 

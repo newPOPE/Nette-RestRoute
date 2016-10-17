@@ -132,7 +132,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
   public function testModuleVersioning($module, $path, $expectedPresenterName, $expectedUrl) {
     $route = new RestRoute($module);
     $route->useURLModuleVersioning(
-      '/v[0-9\.]+/', 
+      RestRoute::MODULE_VERSION_PATH_PREFIX_PATTERN,
       [
         NULL => 'V1',
         'v1' => 'V1',
