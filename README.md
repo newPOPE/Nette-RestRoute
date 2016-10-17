@@ -285,7 +285,7 @@ Then, you define version to module mapping. `NULL` key stands for default module
 ```php
 $router[] = (new RestRoute('Api')) // Optional module
     ->useURLModuleVersioning(
-        '/v[0-9\.]+/',     // Regex for URL version
+        RestRoute::MODULE_VERSION_PATH_PREFIX_PATTERN,     // Regex for URL version
         [                  // URL fragment to module mapping
           NULL => 'V1',    // Default version module is V1
           'v1' => 'V1',    // /v1 to module V1
