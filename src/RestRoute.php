@@ -18,14 +18,6 @@ use Nette\Utils\Validators;
  */
 class RestRoute extends Object implements IRouter {
 
-  const METHOD_OVERRIDE_HTTP_HEADER = 'X-HTTP-Method-Override';
-  /** @deprecated */
-  const HTTP_HEADER_OVERRIDE = self::METHOD_OVERRIDE_HTTP_HEADER;
-
-  const METHOD_OVERRIDE_QUERY_PARAM = '__method';
-  /** @deprecated */
-  const QUERY_PARAM_OVERRIDE = self::METHOD_OVERRIDE_QUERY_PARAM;
-
   const MODULE_VERSION_PATH_PREFIX_PATTERN = '/v[0-9\.]+/';
 
   /** @var string */
@@ -102,6 +94,7 @@ class RestRoute extends Object implements IRouter {
 
     $path = Strings::replace($this->getPath(), '/\//', '\/');
     $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
+
     if (!Strings::match($cleanPath, $pathRexExp)) {
       return NULL;
     }
@@ -197,19 +190,6 @@ class RestRoute extends Object implements IRouter {
    */
   protected function detectMethod(IRequest $request) {
     $requestMethod = $request->getMethod();
-    if ($requestMethod !== 'POST') {
-      return $request->getMethod();
-    }
-
-    $method = $request->getHeader(self::METHOD_OVERRIDE_HTTP_HEADER);
-    if(isset($method)) {
-      return Strings::upper($method);
-    }
-
-    $method = $request->getQuery(self::METHOD_OVERRIDE_QUERY_PARAM);
-    if(isset($method)) {
-      return Strings::upper($method);
-    }
 
     return $requestMethod;
   }

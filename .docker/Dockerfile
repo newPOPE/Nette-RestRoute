@@ -1,4 +1,4 @@
-FROM php:5.6
+FROM php:7.0
 MAINTAINER adam.stipak@gmail.com
 
 RUN apt-get update
