@@ -75,6 +75,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute;
 
     $url = new UrlScript('http://localhost');
+    $url->setScriptPath('/');
     $url->setPath('/first-level/123/second-level/456/re-source');
 
     $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
@@ -111,6 +112,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $url->setPath($path);
+    $url->setScriptPath('/');
     $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
 
     $appRequest = $route->match($request);
@@ -142,6 +144,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $url->setPath($path);
+    $url->setScriptPath('/');
     $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
 
     $appRequest = $route->match($request);

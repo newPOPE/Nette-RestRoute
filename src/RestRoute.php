@@ -97,8 +97,6 @@ class RestRoute implements IRouter {
     $path = Strings::replace($this->getPath(), '/\//', '\/');
     $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
 
-//    dump($httpRequest);
-
     if (!Strings::match($cleanPath, $pathRexExp)) {
       return NULL;
     }
