@@ -319,24 +319,6 @@ class FooPresenter {
 }
 ``` 
 
-##Overriding methods PUT, PATCH, DELETE
-
-Methods ```PUT```, ```PATCH``` and ```DELETE``` can be overriden via:  
-
-### HTTP header ```X-HTTP-Method-Override```
-Example:
-
-```
-X-HTTP-Method-Override: <PUT|PATCH|DELETE>
-```
-
-### Query param ```__method```
-Example:
-
-```
-?__method=<PUT|PATCH|DELETE>
-```
-
 ##Development
 
 RestRoute is developed in [Docker](https://docker.com) container via `docker-compose` command.
