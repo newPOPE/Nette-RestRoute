@@ -227,7 +227,7 @@ query = array(0)
 ### Associations:
 Last item (pair) before .<format> is main resource. Everything what is before the last item are associations ([apigee.com](http://apigee.com/about/)).
 
-**URL:** ```/api/users/1/comments``` &rarr; ```\ApiModule\CommentsPresenter::actionRead|actionCreate|actionUpdate|actionDelete```  
+**URL:** ```/api/users/1/comments``` &rarr; ```\ApiModule\CommentsPresenter::actionReadAll|actionCreate|actionUpdate|actionDelete```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
@@ -258,7 +258,7 @@ data = ""
 query = array(0)
 ```
 
-**URL:** ```/api/users/1/blogs/2/comments``` &rarr; ```\ApiModule\CommentsPresenter::actionRead|actionCreate|actionUpdate|actionDelete```  
+**URL:** ```/api/users/1/blogs/2/comments``` &rarr; ```\ApiModule\CommentsPresenter::actionReadAll|actionCreate|actionUpdate|actionDelete```  
 **HTTP HEADER Accept:** ```application/json```  
 **Method:** GET, POST, PUT, DELETE  
 **Request body:** Empty  
