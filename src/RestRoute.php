@@ -154,7 +154,7 @@ class RestRoute implements IRouter {
     } else {
       $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
     }
-    
+
     return new Request(
       $presenterName,
       $httpRequest->getMethod(),
@@ -222,7 +222,7 @@ class RestRoute implements IRouter {
   }
 
   /**
-   * @return array|null
+   * @return string|boolean
    */
   protected function readInput() {
     return file_get_contents('php://input');
