@@ -4,7 +4,6 @@ namespace AdamStipak;
 
 use Nette\Http\UrlScript;
 use Nette\Http\Request;
-use Nette\Http\Url;
 
 class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
@@ -33,19 +32,15 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
   public function testMatchAndConstructUrl() {
     $route = new RestRoute;
 
-    $url = new UrlScript('http://localhost');
-    $url->setPath('/resource');
-    $url->setQuery(
-      [
-        'access_token' => 'foo-bar',
-      ]
-    );
+    $url = (new UrlScript('http://localhost'))
+      ->withPath('/resource')
+      ->withQuery(['access_token' => 'foo-bar']);
 
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, null, null, null, null, 'GET');
 
     $appRequest = $route->match($request);
 
-    $refUrl = new Url('http://localhost');
+    $refUrl = new UrlScript('http://localhost');
     $url = $route->constructUrl($appRequest, $refUrl);
 
     $expectedUrl = 'http://localhost/resource?access_token=foo-bar';
@@ -55,17 +50,16 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
   public function testMatchAndConstructSpinalCaseUrlSingleResource() {
     $route = new RestRoute;
 
-    $url = new UrlScript('http://localhost');
-    $url->setPath('/re-source');
+    $url = (new UrlScript('http://localhost'))->withPath('/re-source');
 
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, null, null, null, null, 'GET');
 
-    $appRequest = $route->match($request);
+    $params = $route->match($request);
     $expectedPresenterName = 'ReSource';
-    $this->assertEquals($expectedPresenterName, $appRequest->getPresenterName());
+    $this->assertEquals($expectedPresenterName, $params[RestRoute::KEY_PRESENTER]);
 
-    $refUrl = new Url('http://localhost');
-    $url = $route->constructUrl($appRequest, $refUrl);
+    $refUrl = new UrlScript('http://localhost');
+    $url = $route->constructUrl($params, $refUrl);
 
     $expectedUrl = 'http://localhost/re-source';
     $this->assertEquals($expectedUrl, $url);
@@ -74,18 +68,16 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
   public function testMatchAndConstructSpinalCaseUrlMultipleResource() {
     $route = new RestRoute;
 
-    $url = new UrlScript('http://localhost');
-    $url->setScriptPath('/');
-    $url->setPath('/first-level/123/second-level/456/re-source');
+    $url = (new UrlScript('http://localhost'))->withPath('/first-level/123/second-level/456/re-source', '/');
 
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, null, null, null, null, 'GET');
 
-    $appRequest = $route->match($request);
+    $params = $route->match($request);
     $expectedPresenterName = 'ReSource';
-    $this->assertEquals($expectedPresenterName, $appRequest->getPresenterName());
+    $this->assertEquals($expectedPresenterName, $params[RestRoute::KEY_PRESENTER]);
 
-    $refUrl = new Url('http://localhost');
-    $url = $route->constructUrl($appRequest, $refUrl);
+    $refUrl = new UrlScript('http://localhost');
+    $url = $route->constructUrl($params, $refUrl);
 
     $expectedUrl = 'http://localhost/first-level/123/second-level/456/re-source';
     $this->assertEquals($expectedUrl, $url);
@@ -94,66 +86,35 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
   public function testFileUpload() {
     $route = new RestRoute;
 
-    $url = new UrlScript('http://localhost');
-    $url->setPath('/whatever');
-    $files = [ 'file1', 'file2', 'file3' ];
+    $url = (new UrlScript('http://localhost'))->withPath('/whatever');
+    $files = ['file1', 'file2', 'file3'];
 
-    $request = new Request($url, NULL, NULL, $files, NULL, NULL, 'POST');
+    $request = new Request($url, null, $files, null, null, 'POST');
+    $params = $route->match($request);
 
-    $appRequest = $route->match($request);
-    $this->assertEquals($files, $appRequest->getFiles());
+    $this->assertEquals($files, $params[RestRoute::KEY_FILES]);
   }
 
   /**
    * @dataProvider getActions
    */
-  public function testDefault($method, $path, $action, $id = null,  $associations = null) {
+  public function testDefault($method, $path, $action, $id = null, $associations = null) {
     $route = new RestRoute();
 
-    $url = new UrlScript();
-    $url->setPath($path);
-    $url->setScriptPath('/');
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
+    $url = (new UrlScript())->withPath($path, '/');
+    $request = new Request($url, null, null, null, null, $method);
 
-    $appRequest = $route->match($request);
+    $params = $route->match($request);
 
-    $this->assertEquals('Foo', $appRequest->getPresenterName());
-    $this->assertEquals($action, $appRequest->parameters['action']);
+    $this->assertEquals('Foo', $params[RestRoute::KEY_PRESENTER]);
+    $this->assertEquals($action, $params[RestRoute::KEY_ACTION]);
 
-    if($id) {
-      $this->assertEquals($id, $appRequest->parameters['id']);
+    if ($id) {
+      $this->assertEquals($id, $params['id']);
     }
-    if($associations) {
-      $this->assertSame($associations, $appRequest->parameters['associations']);
+    if ($associations) {
+      $this->assertSame($associations, $params[RestRoute::KEY_ASSOCIATIONS]);
     }
-  }
-
-  /**
-   * @dataProvider getVersions
-   */
-  public function testModuleVersioning($module, $path, $expectedPresenterName, $expectedUrl) {
-    $route = new RestRoute($module);
-    $route->useURLModuleVersioning(
-      RestRoute::MODULE_VERSION_PATH_PREFIX_PATTERN,
-      [
-        NULL => 'V1',
-        'v1' => 'V1',
-        'v2' => 'V2'
-      ]
-  );
-
-    $url = new UrlScript();
-    $url->setPath($path);
-    $url->setScriptPath('/');
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, 'GET');
-
-    $appRequest = $route->match($request);
-
-    $this->assertEquals($expectedPresenterName, $appRequest->getPresenterName());
-
-    $refUrl = new Url('http://localhost');
-    $url = $route->constructUrl($appRequest, $refUrl);
-    $this->assertEquals($expectedUrl, $url);
   }
 
   public function getActions() {
@@ -168,11 +129,37 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     ];
   }
 
+  /**
+   * @dataProvider getVersions
+   */
+  public function testModuleVersioning($module, $path, $expectedPresenterName, $expectedUrl) {
+    $route = new RestRoute($module);
+    $route->useURLModuleVersioning(
+      RestRoute::MODULE_VERSION_PATH_PREFIX_PATTERN,
+      [
+        null => 'V1',
+        'v1' => 'V1',
+        'v2' => 'V2'
+      ]
+    );
+
+    $url = (new UrlScript())->withPath($path, '/');
+    $request = new Request($url, null, null, null, null, 'GET');
+
+    $params = $route->match($request);
+
+    $this->assertEquals($expectedPresenterName, $params[RestRoute::KEY_PRESENTER]);
+
+    $refUrl = new UrlScript('http://localhost');
+    $url = $route->constructUrl($params, $refUrl);
+    $this->assertEquals($expectedUrl, $url);
+  }
+
   public function getVersions() {
     return [
-      [NULL, '/foo', 'V1:Foo', 'http://localhost/v1/foo'],
-      [NULL, '/v1/foo', 'V1:Foo', 'http://localhost/v1/foo'],
-      [NULL, '/v2/foo', 'V2:Foo', 'http://localhost/v2/foo'],
+      [null, '/foo', 'V1:Foo', 'http://localhost/v1/foo'],
+      [null, '/v1/foo', 'V1:Foo', 'http://localhost/v1/foo'],
+      [null, '/v2/foo', 'V2:Foo', 'http://localhost/v2/foo'],
       ['Api', '/api/foo', 'Api:V1:Foo', 'http://localhost/api/v1/foo'],
       ['Api', '/api/v1/foo', 'Api:V1:Foo', 'http://localhost/api/v1/foo'],
     ];

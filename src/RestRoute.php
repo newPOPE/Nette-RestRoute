@@ -3,11 +3,10 @@
 namespace AdamStipak;
 
 use AdamStipak\Support\Inflector;
-use Nette\Application\IRouter;
+use Nette\Http\UrlScript;
 use Nette\InvalidArgumentException;
 use Nette\Application\Request;
 use Nette\Http\IRequest;
-use Nette\Http\Url;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
@@ -16,11 +15,24 @@ use Nette\Utils\Validators;
 /**
  * @author Adam Štipák <adam.stipak@gmail.com>
  */
-class RestRoute implements IRouter {
-
+class RestRoute implements \Nette\Routing\Router {
   use SmartObject;
 
-  const MODULE_VERSION_PATH_PREFIX_PATTERN = '/v[0-9\.]+/';
+  public const MODULE_VERSION_PATH_PREFIX_PATTERN = '/v[0-9\.]+/';
+
+  public const KEY_PRESENTER = 'presenter';
+
+  public const KEY_ACTION = 'action';
+
+  public const KEY_METHOD = 'method';
+
+  public const KEY_POST = 'post';
+
+  public const KEY_FILES = 'files';
+
+  public const KEY_ASSOCIATIONS = 'associations';
+
+  public const KEY_QUERY = 'query';
 
   /** @var string */
   protected $path;
@@ -32,7 +44,7 @@ class RestRoute implements IRouter {
   protected $versionRegex;
 
   /** @var boolean */
-  protected $useURLModuleVersioning = FALSE;
+  protected $useURLModuleVersioning = false;
 
   /** @var array */
   protected $versionToModuleMapping;
@@ -40,14 +52,14 @@ class RestRoute implements IRouter {
   /** @var array */
   protected $formats = [
     'json' => 'application/json',
-    'xml'  => 'application/xml',
+    'xml' => 'application/xml',
   ];
 
   /** @var string */
   protected $defaultFormat;
 
-  public function __construct($module = NULL, $defaultFormat = 'json') {
-    if(!array_key_exists($defaultFormat, $this->formats)) {
+  public function __construct($module = null, $defaultFormat = 'json') {
+    if (!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
 
@@ -60,8 +72,8 @@ class RestRoute implements IRouter {
    * @param array $moduleMapping
    * @return $this
    */
-  public function useURLModuleVersioning($versionRegex, array $moduleMapping) {
-    $this->useURLModuleVersioning = TRUE;
+  public function useURLModuleVersioning($versionRegex, array $moduleMapping): self {
+    $this->useURLModuleVersioning = true;
     $this->versionRegex = $versionRegex;
     $this->versionToModuleMapping = $moduleMapping;
     return $this;
@@ -70,26 +82,26 @@ class RestRoute implements IRouter {
   /**
    * @return string
    */
-  public function getDefaultFormat() {
+  public function getDefaultFormat(): string {
     return $this->defaultFormat;
   }
 
   /**
    * @return string
    */
-  public function getPath() {
+  public function getPath(): string {
     $path = implode('/', explode(':', $this->module));
     $this->path = Strings::lower($path);
 
-    return (string) $this->path;
+    return (string)$this->path;
   }
 
   /**
    * Maps HTTP request to a Request object.
-   * @param \Nette\Http\IRequest $httpRequest
-   * @return \Nette\Application\Request|NULL
+   * @param IRequest $httpRequest
+   * @return array|null
    */
-  public function match(IRequest $httpRequest) {
+  public function match(IRequest $httpRequest): ?array {
     $url = $httpRequest->getUrl();
     $basePath = Strings::replace($url->getBasePath(), '/\//', '\/');
     $cleanPath = Strings::replace($url->getPath(), "/^{$basePath}/");
@@ -98,7 +110,7 @@ class RestRoute implements IRouter {
     $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
 
     if (!Strings::match($cleanPath, $pathRexExp)) {
-      return NULL;
+      return null;
     }
 
     $cleanPath = Strings::replace($cleanPath, '/^' . $path . '\//');
@@ -112,14 +124,14 @@ class RestRoute implements IRouter {
       $version = array_shift($frags);
       if (!Strings::match($version, $this->versionRegex)) {
         array_unshift($frags, $version);
-        $version = NULL;
+        $version = null;
       }
     }
 
     // Resource ID.
     if (count($frags) % 2 === 0) {
       $params['id'] = array_pop($frags);
-    } elseif ($params['action'] == 'read') {
+    } elseif ($params['action'] === 'read') {
       $params['action'] = 'readAll';
     }
     $presenterName = Inflector::studlyCase(array_pop($frags));
@@ -127,44 +139,49 @@ class RestRoute implements IRouter {
     // Allow to use URLs like domain.tld/presenter.format.
     $formats = join('|', array_keys($this->formats));
     if (Strings::match($presenterName, "/.+\.({$formats})$/")) {
-        list($presenterName) = explode('.', $presenterName);
+      list($presenterName) = explode('.', $presenterName);
     }
 
     // Associations.
     $assoc = [];
     if (count($frags) > 0 && count($frags) % 2 === 0) {
       foreach ($frags as $k => $f) {
-        if ($k % 2 !== 0) continue;
+        if ($k % 2 !== 0) {
+          continue;
+        }
 
         $assoc[$f] = $frags[$k + 1];
       }
     }
 
     $params['format'] = $this->detectFormat($httpRequest);
-    $params['associations'] = $assoc;
+    $params[self::KEY_ASSOCIATIONS] = $assoc;
     $params['data'] = $this->readInput();
-    $params['query'] = $httpRequest->getQuery();
+    $params[self::KEY_QUERY] = $httpRequest->getQuery();
 
     if ($this->useURLModuleVersioning) {
       $suffix = $presenterName;
       $presenterName = empty($this->module) ? "" : $this->module . ':';
       $presenterName .= array_key_exists($version, $this->versionToModuleMapping)
         ? $this->versionToModuleMapping[$version] . ":" . $suffix
-        : $this->versionToModuleMapping[NULL] . ":" . $suffix;
+        : $this->versionToModuleMapping[null] . ":" . $suffix;
     } else {
       $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
     }
 
-    return new Request(
-      $presenterName,
-      $httpRequest->getMethod(),
-      $params,
-      [],
-      $httpRequest->getFiles()
-    );
+    $returnArray = [
+      self::KEY_PRESENTER => $presenterName,
+      self::KEY_ACTION => $params['action'],
+      self::KEY_METHOD => $httpRequest->getMethod(),
+      self::KEY_POST => $httpRequest->getPost(),
+      self::KEY_FILES => $httpRequest->getFiles(),
+      Request::SECURED => $httpRequest->isSecured()
+    ];
+
+    return array_merge($returnArray, $params);
   }
 
-  protected function detectAction(IRequest $request) {
+  protected function detectAction(IRequest $request): ?string {
     $method = $this->detectMethod($request);
 
     switch ($method) {
@@ -173,7 +190,7 @@ class RestRoute implements IRouter {
       case 'POST':
         return 'create';
       case 'PATCH':
-        return'partialUpdate';
+        return 'partialUpdate';
       case 'PUT':
         return 'update';
       case 'DELETE':
@@ -190,10 +207,8 @@ class RestRoute implements IRouter {
    *
    * @return string
    */
-  protected function detectMethod(IRequest $request) {
-    $requestMethod = $request->getMethod();
-
-    return $requestMethod;
+  protected function detectMethod(IRequest $request): string {
+    return $request->getMethod();
   }
 
   /**
@@ -204,7 +219,7 @@ class RestRoute implements IRouter {
     $header = $request->getHeader('Accept'); // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
     foreach ($this->formats as $format => $fullFormatName) {
       $fullFormatName = Strings::replace($fullFormatName, '/\//', '\/');
-      if(Strings::match($header, "/{$fullFormatName}/")) {
+      if ($header !== null && Strings::match($header, "/{$fullFormatName}/")) {
         return $format;
       }
     }
@@ -213,7 +228,7 @@ class RestRoute implements IRouter {
     $path = $request->getUrl()->getPath();
     $formats = array_keys($this->formats);
     $formats = implode('|', $formats);
-    if(Strings::match($path, "/\.({$formats})$/")) {
+    if (Strings::match($path, "/\.({$formats})$/")) {
       list($path, $format) = explode('.', $path);
       return $format;
     }
@@ -230,31 +245,29 @@ class RestRoute implements IRouter {
 
   /**
    * Constructs absolute URL from Request object.
-   * @param \Nette\Application\Request $appRequest
-   * @param \Nette\Http\Url $refUrl
-   * @throws \Nette\InvalidStateException
-   * @return string|NULL
+   * @param array $params
+   * @param UrlScript $refUrl
+   * @return string|null
    */
-  public function constructUrl(Request $appRequest, Url $refUrl) {
+  public function constructUrl(array $params, UrlScript $refUrl): ?string {
     // Module prefix not match.
-    if($this->module && !Strings::startsWith($appRequest->getPresenterName(), $this->module)) {
-      return NULL;
+    if ($this->module && !Strings::startsWith($params[self::KEY_PRESENTER], $this->module)) {
+      return null;
     }
 
-    $parameters = $appRequest->getParameters();
     $url = $refUrl->getBaseUrl();
     $urlStack = [];
 
     // Module prefix.
-    $moduleFrags = explode(":", $appRequest->getPresenterName());
+    $moduleFrags = explode(":", $params[self::KEY_PRESENTER]);
     $moduleFrags = array_map('\AdamStipak\Support\Inflector::spinalCase', $moduleFrags);
     $resourceName = array_pop($moduleFrags);
     $urlStack += $moduleFrags;
 
     // Associations.
-    if (isset($parameters['associations']) && Validators::is($parameters['associations'], 'array')) {
-      $associations = $parameters['associations'];
-      unset($parameters['associations']);
+    if (isset($params[self::KEY_ASSOCIATIONS]) && Validators::is($params[self::KEY_ASSOCIATIONS], 'array')) {
+      $associations = $params[self::KEY_ASSOCIATIONS];
+      unset($params[self::KEY_ASSOCIATIONS]);
 
       foreach ($associations as $key => $value) {
         $urlStack[] = $key;
@@ -266,19 +279,19 @@ class RestRoute implements IRouter {
     $urlStack[] = $resourceName;
 
     // Id.
-    if (isset($parameters['id']) && Validators::is($parameters['id'], 'scalar')) {
-      $urlStack[] = $parameters['id'];
-      unset($parameters['id']);
+    if (isset($params['id']) && Validators::is($params['id'], 'scalar')) {
+      $urlStack[] = $params['id'];
+      unset($params['id']);
     }
 
-    $url = $url . implode('/', $urlStack);
+    $url .= implode('/', $urlStack);
 
     $sep = ini_get('arg_separator.input');
 
-    if(isset($parameters['query'])) {
-      $query = http_build_query($parameters['query'], '', $sep ? $sep[0] : '&');
+    if (isset($params[self::KEY_QUERY])) {
+      $query = http_build_query($params[self::KEY_QUERY], '', $sep ? $sep[0] : '&');
 
-      if ($query != '') {
+      if ($query !== '') {
         $url .= '?' . $query;
       }
     }
