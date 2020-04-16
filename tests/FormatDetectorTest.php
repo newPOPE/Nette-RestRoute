@@ -10,7 +10,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
   private function runDetectFormatMethod($route, $request) {
     $method = new Method($route, 'detectFormat');
-    $method->setAccessible(true);
+    $method->setAccessible(TRUE);
     return $method->invoke($route, $request);
   }
 
@@ -19,7 +19,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $request = new Request(
-      $url, null, null, null, ['accept' => 'application/json']
+      $url, NULL, NULL, NULL, ['accept' => 'application/json']
     );
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -31,7 +31,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $request = new Request(
-      $url, null, null, null, ['accept' => 'application/xml']
+      $url, NULL, NULL, NULL, ['accept' => 'application/xml']
     );
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -43,7 +43,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $request = new Request(
-      $url, null, null, null, ['accept' => '*/*']
+      $url, NULL, NULL, NULL, ['accept' => '*/*']
     );
     $format = $this->runDetectFormatMethod($route, $request);
 

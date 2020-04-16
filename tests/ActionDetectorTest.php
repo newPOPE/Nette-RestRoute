@@ -17,7 +17,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute();
 
     $url = (new UrlScript())->withPath('/foo');
-    $request = new Request($url, null, null, null, null, $method);
+    $request = new Request($url, NULL, NULL, NULL, NULL, $method);
 
     $parameters = $route->match($request);
 

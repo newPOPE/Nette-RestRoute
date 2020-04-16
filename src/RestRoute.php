@@ -44,7 +44,7 @@ class RestRoute implements \Nette\Routing\Router {
   protected $versionRegex;
 
   /** @var boolean */
-  protected $useURLModuleVersioning = false;
+  protected $useURLModuleVersioning = FALSE;
 
   /** @var array */
   protected $versionToModuleMapping;
@@ -58,7 +58,7 @@ class RestRoute implements \Nette\Routing\Router {
   /** @var string */
   protected $defaultFormat;
 
-  public function __construct($module = null, $defaultFormat = 'json') {
+  public function __construct($module = NULL, $defaultFormat = 'json') {
     if (!array_key_exists($defaultFormat, $this->formats)) {
       throw new InvalidArgumentException("Format '{$defaultFormat}' is not allowed.");
     }
@@ -73,7 +73,7 @@ class RestRoute implements \Nette\Routing\Router {
    * @return $this
    */
   public function useURLModuleVersioning($versionRegex, array $moduleMapping): self {
-    $this->useURLModuleVersioning = true;
+    $this->useURLModuleVersioning = TRUE;
     $this->versionRegex = $versionRegex;
     $this->versionToModuleMapping = $moduleMapping;
     return $this;
@@ -110,7 +110,7 @@ class RestRoute implements \Nette\Routing\Router {
     $pathRexExp = empty($path) ? "/^.+$/" : "/^{$path}\/.*$/";
 
     if (!Strings::match($cleanPath, $pathRexExp)) {
-      return null;
+      return NULL;
     }
 
     $cleanPath = Strings::replace($cleanPath, '/^' . $path . '\//');
@@ -124,7 +124,7 @@ class RestRoute implements \Nette\Routing\Router {
       $version = array_shift($frags);
       if (!Strings::match($version, $this->versionRegex)) {
         array_unshift($frags, $version);
-        $version = null;
+        $version = NULL;
       }
     }
 
@@ -164,7 +164,7 @@ class RestRoute implements \Nette\Routing\Router {
       $presenterName = empty($this->module) ? "" : $this->module . ':';
       $presenterName .= array_key_exists($version, $this->versionToModuleMapping)
         ? $this->versionToModuleMapping[$version] . ":" . $suffix
-        : $this->versionToModuleMapping[null] . ":" . $suffix;
+        : $this->versionToModuleMapping[NULL] . ":" . $suffix;
     } else {
       $presenterName = empty($this->module) ? $presenterName : $this->module . ':' . $presenterName;
     }
@@ -219,7 +219,7 @@ class RestRoute implements \Nette\Routing\Router {
     $header = $request->getHeader('Accept'); // http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html
     foreach ($this->formats as $format => $fullFormatName) {
       $fullFormatName = Strings::replace($fullFormatName, '/\//', '\/');
-      if ($header !== null && Strings::match($header, "/{$fullFormatName}/")) {
+      if ($header !== NULL && Strings::match($header, "/{$fullFormatName}/")) {
         return $format;
       }
     }
@@ -252,7 +252,7 @@ class RestRoute implements \Nette\Routing\Router {
   public function constructUrl(array $params, UrlScript $refUrl): ?string {
     // Module prefix not match.
     if ($this->module && !Strings::startsWith($params[self::KEY_PRESENTER], $this->module)) {
-      return null;
+      return NULL;
     }
 
     $url = $refUrl->getBaseUrl();

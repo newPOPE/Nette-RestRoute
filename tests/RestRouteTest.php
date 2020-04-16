@@ -36,7 +36,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
       ->withPath('/resource')
       ->withQuery(['access_token' => 'foo-bar']);
 
-    $request = new Request($url, null, null, null, null, 'GET');
+    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
 
     $appRequest = $route->match($request);
 
@@ -52,7 +52,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $url = (new UrlScript('http://localhost'))->withPath('/re-source');
 
-    $request = new Request($url, null, null, null, null, 'GET');
+    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
 
     $params = $route->match($request);
     $expectedPresenterName = 'ReSource';
@@ -70,7 +70,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $url = (new UrlScript('http://localhost'))->withPath('/first-level/123/second-level/456/re-source', '/');
 
-    $request = new Request($url, null, null, null, null, 'GET');
+    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
 
     $params = $route->match($request);
     $expectedPresenterName = 'ReSource';
@@ -89,7 +89,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $url = (new UrlScript('http://localhost'))->withPath('/whatever');
     $files = ['file1', 'file2', 'file3'];
 
-    $request = new Request($url, null, $files, null, null, 'POST');
+    $request = new Request($url, NULL, $files, NULL, NULL, 'POST');
     $params = $route->match($request);
 
     $this->assertEquals($files, $params[RestRoute::KEY_FILES]);
@@ -98,11 +98,11 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
   /**
    * @dataProvider getActions
    */
-  public function testDefault($method, $path, $action, $id = null, $associations = null) {
+  public function testDefault($method, $path, $action, $id = NULL, $associations = NULL) {
     $route = new RestRoute();
 
     $url = (new UrlScript())->withPath($path, '/');
-    $request = new Request($url, null, null, null, null, $method);
+    $request = new Request($url, NULL, NULL, NULL, NULL, $method);
 
     $params = $route->match($request);
 
@@ -137,14 +137,14 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $route->useURLModuleVersioning(
       RestRoute::MODULE_VERSION_PATH_PREFIX_PATTERN,
       [
-        null => 'V1',
+        NULL => 'V1',
         'v1' => 'V1',
         'v2' => 'V2'
       ]
     );
 
     $url = (new UrlScript())->withPath($path, '/');
-    $request = new Request($url, null, null, null, null, 'GET');
+    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
 
     $params = $route->match($request);
 
@@ -157,9 +157,9 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
   public function getVersions() {
     return [
-      [null, '/foo', 'V1:Foo', 'http://localhost/v1/foo'],
-      [null, '/v1/foo', 'V1:Foo', 'http://localhost/v1/foo'],
-      [null, '/v2/foo', 'V2:Foo', 'http://localhost/v2/foo'],
+      [NULL, '/foo', 'V1:Foo', 'http://localhost/v1/foo'],
+      [NULL, '/v1/foo', 'V1:Foo', 'http://localhost/v1/foo'],
+      [NULL, '/v2/foo', 'V2:Foo', 'http://localhost/v2/foo'],
       ['Api', '/api/foo', 'Api:V1:Foo', 'http://localhost/api/v1/foo'],
       ['Api', '/api/v1/foo', 'Api:V1:Foo', 'http://localhost/api/v1/foo'],
     ];
