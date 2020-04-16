@@ -53,7 +53,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
   public function testJsonFormatWithFallbackInUrl() {
     $route = new RestRoute('Api');
 
-    $url = new UrlScript('/api/foo.json');
+    $url = (new UrlScript())->withPath('/api/foo.json');
     $request = new Request($url);
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -63,7 +63,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
   public function testXmlFormatWithFallbackInUrl() {
     $route = new RestRoute('Api');
 
-    $url = new UrlScript('/api/foo.xml');
+    $url = (new UrlScript())->withPath('/api/foo.xml');
     $request = new Request($url);
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -73,7 +73,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
   public function testDefaultFormat() {
     $route = new RestRoute('Api');
 
-    $url = new UrlScript('/api/foo');
+    $url = (new UrlScript())->withPath('/api/foo');
     $request = new Request($url);
     $format = $this->runDetectFormatMethod($route, $request);
 
