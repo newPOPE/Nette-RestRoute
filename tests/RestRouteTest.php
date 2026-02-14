@@ -5,20 +5,20 @@ namespace AdamStipak;
 use Nette\Http\UrlScript;
 use Nette\Http\Request;
 
-class RestRouteTest extends \PHPUnit_Framework_TestCase {
+class RestRouteTest extends \PHPUnit\Framework\TestCase {
 
   public function testConstructorWithNoModule() {
     $route = new RestRoute;
+    $this->assertInstanceOf(RestRoute::class, $route);
   }
 
   public function testConstructorWithEmptyDefaultFormat() {
     $route = new RestRoute('Api');
+    $this->assertInstanceOf(RestRoute::class, $route);
   }
 
-  /**
-   * @expectedException \Nette\InvalidArgumentException
-   */
   public function testConstructorWithInvalidDefaultFormat() {
+    $this->expectException(\Nette\InvalidArgumentException::class);
     $route = new RestRoute('Api', 'invalid');
   }
 
@@ -36,7 +36,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
       ->withPath('/resource')
       ->withQuery(['access_token' => 'foo-bar']);
 
-    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, [], [], [], [], 'GET');
 
     $appRequest = $route->match($request);
 
@@ -52,7 +52,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $url = (new UrlScript('http://localhost'))->withPath('/re-source');
 
-    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, [], [], [], [], 'GET');
 
     $params = $route->match($request);
     $expectedPresenterName = 'ReSource';
@@ -70,7 +70,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
 
     $url = (new UrlScript('http://localhost'))->withPath('/first-level/123/second-level/456/re-source', '/');
 
-    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, [], [], [], [], 'GET');
 
     $params = $route->match($request);
     $expectedPresenterName = 'ReSource';
@@ -89,7 +89,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $url = (new UrlScript('http://localhost'))->withPath('/whatever');
     $files = ['file1', 'file2', 'file3'];
 
-    $request = new Request($url, NULL, $files, NULL, NULL, 'POST');
+    $request = new Request($url, [], $files, [], [], 'POST');
     $params = $route->match($request);
 
     $this->assertEquals($files, $params[RestRoute::KEY_FILES]);
@@ -102,7 +102,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute();
 
     $url = (new UrlScript())->withPath($path, '/');
-    $request = new Request($url, NULL, NULL, NULL, NULL, $method);
+    $request = new Request($url, [], [], [], [], $method);
 
     $params = $route->match($request);
 
@@ -117,7 +117,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     }
   }
 
-  public function getActions() {
+  public static function getActions() {
     return [
       ['POST', '/foo', 'create'],
       ['GET', '/foo', 'readAll'],
@@ -144,7 +144,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     );
 
     $url = (new UrlScript())->withPath($path, '/');
-    $request = new Request($url, NULL, NULL, NULL, NULL, 'GET');
+    $request = new Request($url, [], [], [], [], 'GET');
 
     $params = $route->match($request);
 
@@ -155,7 +155,7 @@ class RestRouteTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function getVersions() {
+  public static function getVersions() {
     return [
       [NULL, '/foo', 'V1:Foo', 'http://localhost/v1/foo'],
       [NULL, '/v1/foo', 'V1:Foo', 'http://localhost/v1/foo'],

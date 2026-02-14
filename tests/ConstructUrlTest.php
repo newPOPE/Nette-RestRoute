@@ -4,7 +4,7 @@ namespace AdamStipak;
 
 use Nette\Http\UrlScript;
 
-class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
+class ConstructUrlTest extends \PHPUnit\Framework\TestCase {
 
   public function testNoModuleNoAssociations() {
     $route = new RestRoute;
@@ -36,7 +36,7 @@ class ConstructUrlTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($expectedUrl, $url);
   }
 
-  public function createAssociations() {
+  public static function createAssociations() {
     return [
       [
         'associations' => [

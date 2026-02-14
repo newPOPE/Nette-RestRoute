@@ -5,7 +5,7 @@ namespace AdamStipak;
 use Nette\Http\UrlScript;
 use Nette\Http\Request;
 
-class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
+class ActionDetectorTest extends \PHPUnit\Framework\TestCase {
 
   /**
    * @param $method
@@ -17,7 +17,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $route = new RestRoute();
 
     $url = (new UrlScript())->withPath('/foo');
-    $request = new Request($url, NULL, NULL, NULL, NULL, $method);
+    $request = new Request($url, [], [], [], [], $method);
 
     $parameters = $route->match($request);
 
@@ -25,7 +25,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($action, $parameters[RestRoute::KEY_ACTION]);
   }
 
-  public function getActions() {
+  public static function getActions() {
     return [
       ['POST', 'create'],
       ['GET', 'readAll'],
@@ -36,7 +36,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     ];
   }
 
-  public function getActionsForOverride() {
+  public static function getActionsForOverride() {
     return [
       ['PATCH', 'partialUpdate'],
       ['PUT', 'update'],

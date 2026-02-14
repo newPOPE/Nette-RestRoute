@@ -4,12 +4,12 @@ namespace AdamStipak;
 
 use Nette\Http\Request;
 use Nette\Http\UrlScript;
-use Nette\Reflection\Method;
+use ReflectionMethod;
 
-class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
+class FormatDetectorTest extends \PHPUnit\Framework\TestCase {
 
   private function runDetectFormatMethod($route, $request) {
-    $method = new Method($route, 'detectFormat');
+    $method = new ReflectionMethod($route, 'detectFormat');
     $method->setAccessible(TRUE);
     return $method->invoke($route, $request);
   }
@@ -19,7 +19,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $request = new Request(
-      $url, NULL, NULL, NULL, ['accept' => 'application/json']
+      $url, [], [], [], ['accept' => 'application/json']
     );
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -31,7 +31,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $request = new Request(
-      $url, NULL, NULL, NULL, ['accept' => 'application/xml']
+      $url, [], [], [], ['accept' => 'application/xml']
     );
     $format = $this->runDetectFormatMethod($route, $request);
 
@@ -43,7 +43,7 @@ class FormatDetectorTest extends \PHPUnit_Framework_TestCase {
 
     $url = new UrlScript();
     $request = new Request(
-      $url, NULL, NULL, NULL, ['accept' => '*/*']
+      $url, [], [], [], ['accept' => '*/*']
     );
     $format = $this->runDetectFormatMethod($route, $request);
 

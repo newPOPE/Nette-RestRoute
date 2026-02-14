@@ -5,7 +5,6 @@ namespace AdamStipak;
 use AdamStipak\Support\Inflector;
 use Nette\Http\UrlScript;
 use Nette\InvalidArgumentException;
-use Nette\Application\Request;
 use Nette\Http\IRequest;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -90,7 +89,7 @@ class RestRoute implements \Nette\Routing\Router {
    * @return string
    */
   public function getPath(): string {
-    $path = implode('/', explode(':', $this->module));
+    $path = implode('/', explode(':', $this->module ?? ''));
     $this->path = Strings::lower($path);
 
     return (string)$this->path;
@@ -175,7 +174,7 @@ class RestRoute implements \Nette\Routing\Router {
       self::KEY_METHOD => $httpRequest->getMethod(),
       self::KEY_POST => $httpRequest->getPost(),
       self::KEY_FILES => $httpRequest->getFiles(),
-      Request::SECURED => $httpRequest->isSecured()
+      'secured' => $httpRequest->isSecured()
     ];
 
     return array_merge($returnArray, $params);

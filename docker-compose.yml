@@ -1,5 +1,6 @@
-default:
-  build: .docker
-  volumes:
-    - .:/data
-  working_dir: /data
+services:
+  default:
+    build: .docker
+    volumes:
+      - .:/data
+    working_dir: /data
