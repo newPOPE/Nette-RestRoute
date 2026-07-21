@@ -1,8 +1,12 @@
-# REST route for [Nette Framework](http://nette.org) 
-[![Build Status](https://travis-ci.org/newPOPE/Nette-RestRoute.png)](https://travis-ci.org/newPOPE/Nette-RestRoute)
+# REST route for [Nette Framework](http://nette.org)
 
 Route automatically maps CRUD to Presenters and actions in the defined module.
-And creates parameters which are accessible in Presenter.  
+And creates parameters which are accessible in Presenter.
+
+## Requirements
+
+- PHP 8.1+
+- Nette 3.2+
 
 - format
 - id (autodetected)
@@ -319,17 +323,17 @@ class FooPresenter {
 }
 ``` 
 
-##Development
+## Development
 
-RestRoute is developed in [Docker](https://docker.com) container via `docker-compose` command.
+RestRoute is developed in [Docker](https://docker.com) container via `docker compose` command.
 
-Example:  
+Example:
 ```sh
-$ docker-compose run --rm default install  # install deps via composer
-$ docker-compose run --rm default  # runs tests in container
+$ docker compose run --rm default install  # install deps via composer
+$ docker compose run --rm default  # runs tests in container
 ```
 
-Attach to container:  
+Attach to container:
 ```sh
-$ docker-compose run --rm default bash # runs bash in container and attach tty
+$ docker compose run --rm default bash # runs bash in container and attach tty
 ```

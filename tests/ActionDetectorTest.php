@@ -5,7 +5,7 @@ namespace AdamStipak;
 use Nette\Http\UrlScript;
 use Nette\Http\Request;
 
-class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
+class ActionDetectorTest extends \PHPUnit\Framework\TestCase {
 
   /**
    * @param $method
@@ -16,17 +16,16 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
   public function testAction($method, $action) {
     $route = new RestRoute();
 
-    $url = new UrlScript();
-    $url->setPath('/foo');
-    $request = new Request($url, NULL, NULL, NULL, NULL, NULL, $method);
+    $url = (new UrlScript())->withPath('/foo');
+    $request = new Request($url, [], [], [], [], $method);
 
-    $appRequest = $route->match($request);
+    $parameters = $route->match($request);
 
-    $this->assertEquals('Foo', $appRequest->getPresenterName());
-    $this->assertEquals($action, $appRequest->parameters['action']);
+    $this->assertEquals('Foo', $parameters[RestRoute::KEY_PRESENTER]);
+    $this->assertEquals($action, $parameters[RestRoute::KEY_ACTION]);
   }
 
-  public function getActions() {
+  public static function getActions() {
     return [
       ['POST', 'create'],
       ['GET', 'readAll'],
@@ -37,7 +36,7 @@ class ActionDetectorTest extends \PHPUnit_Framework_TestCase {
     ];
   }
 
-  public function getActionsForOverride() {
+  public static function getActionsForOverride() {
     return [
       ['PATCH', 'partialUpdate'],
       ['PUT', 'update'],
